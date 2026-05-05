@@ -15,6 +15,8 @@ import {
 } from "lucide-react";
 import api from "../api/axios";
 import { useAuth } from "../context/AuthContext";
+import Card from "../components/ui/Card";
+import Button from "../components/ui/Button";
 
 function StatusBadge({ status }) {
   const base = "rounded-full px-2 py-0.5 text-xs font-medium";
@@ -103,8 +105,8 @@ export default function Dashboard() {
 
   if (loading || !user) {
     return (
-      <div className="min-h-full flex items-center justify-center bg-slate-50">
-        <Loader2 className="h-10 w-10 animate-spin text-blue-600" aria-label="Loading" />
+      <div className="app-shell flex min-h-full items-center justify-center">
+        <Loader2 className="h-10 w-10 animate-spin text-brand-600" aria-label="Loading" />
       </div>
     );
   }
@@ -113,10 +115,10 @@ export default function Dashboard() {
   const linked = !!user.telegramChatId;
 
   return (
-    <div className="min-h-full bg-slate-50 pb-16 pt-8">
-      <div className="mx-auto max-w-2xl px-4">
+    <div className="app-shell pb-16 pt-8">
+      <div className="mx-auto max-w-3xl px-4 sm:px-6">
         {!linked && (
-          <div className="mb-6 flex gap-3 rounded-2xl border border-amber-200 bg-amber-50 p-4 text-sm text-amber-950 shadow-sm">
+          <Card className="mb-6 flex gap-3 border-amber-200 bg-amber-50 p-4 text-sm text-amber-950">
             <AlertTriangle className="mt-0.5 h-5 w-5 shrink-0 text-amber-600" aria-hidden />
             <div className="space-y-2">
               <p className="font-semibold">Telegram is not connected to this account</p>
@@ -141,24 +143,20 @@ export default function Dashboard() {
                   dashboard).
                 </li>
               </ol>
-              <Link
-                to="/connect-telegram"
-                className="inline-flex items-center gap-2 font-medium text-blue-700 underline decoration-blue-400 hover:text-blue-900"
-              >
+              <Link to="/connect-telegram" className="inline-flex items-center gap-2 link-brand">
                 <MessageCircle className="h-4 w-4" aria-hidden />
                 Open Link Telegram page
               </Link>
             </div>
-          </div>
+          </Card>
         )}
 
-        {/* Header bar */}
-        <header className="mb-8 flex flex-wrap items-center justify-between gap-4 rounded-2xl border border-slate-200 bg-white p-4 shadow-sm">
+        <Card className="mb-8 flex flex-wrap items-center justify-between gap-4 p-5">
           <div className="flex items-start gap-3">
-            <CalendarClock className="mt-0.5 h-6 w-6 text-blue-600 shrink-0" aria-hidden />
+            <CalendarClock className="mt-0.5 h-6 w-6 text-brand-600 shrink-0" aria-hidden />
             <div>
-              <p className="text-sm text-slate-500">Next briefing</p>
-              <p className="font-semibold text-slate-900">
+              <p className="text-sm text-muted">Next briefing</p>
+              <p className="font-semibold text-slate-900 tracking-tight">
                 {user.briefingTime} — {user.timezone}
               </p>
             </div>
@@ -172,11 +170,12 @@ export default function Dashboard() {
               <span className={`h-2 w-2 rounded-full ${active ? "bg-emerald-500" : "bg-red-500"}`} />
               {active ? "Active" : "Paused"}
             </span>
-            <button
+            <Button
               type="button"
               onClick={handleToggleActive}
               disabled={toggleLoading}
-              className="inline-flex items-center gap-2 rounded-xl border border-slate-200 bg-white px-4 py-2 text-sm font-medium text-slate-800 shadow-sm hover:bg-slate-50 disabled:opacity-50"
+              variant="secondary"
+              size="sm"
             >
               {toggleLoading ? (
                 <Loader2 className="h-4 w-4 animate-spin" />
@@ -186,30 +185,29 @@ export default function Dashboard() {
                 <Play className="h-4 w-4" />
               )}
               {active ? "Pause" : "Resume"}
-            </button>
+            </Button>
           </div>
-        </header>
+        </Card>
 
-        {/* Send now */}
         <section className="mb-8">
-          <button
+          <Button
             type="button"
             onClick={handleSendNow}
             disabled={sendLoading || !linked}
             title={!linked ? "Connect Telegram first" : undefined}
-            className="flex w-full items-center justify-center gap-2 rounded-2xl bg-blue-600 py-4 text-lg font-semibold text-white shadow-md transition hover:bg-blue-700 disabled:cursor-not-allowed disabled:opacity-60"
+            className="w-full"
+            size="lg"
           >
             {sendLoading ? (
               <Loader2 className="h-6 w-6 animate-spin" aria-hidden />
             ) : (
               <Send className="h-6 w-6" aria-hidden />
             )}
-            {sendLoading ? "Sending…" : "Send briefing now"}
-          </button>
+            {sendLoading ? "Sending..." : "Send briefing now"}
+          </Button>
         </section>
 
-        {/* Latest briefing */}
-        <section className="mb-8 rounded-2xl border border-slate-200 bg-white p-5 shadow-sm">
+        <Card className="mb-8 p-6">
           <h2 className="mb-3 flex items-center gap-2 text-sm font-semibold uppercase tracking-wide text-slate-500">
             <History className="h-4 w-4" aria-hidden />
             Last briefing
@@ -219,17 +217,16 @@ export default function Dashboard() {
               readOnly
               value={latestBriefing.content}
               rows={10}
-              className="w-full resize-y rounded-xl border border-slate-200 bg-slate-50 p-3 font-sans text-sm text-slate-800 outline-none"
+              className="w-full resize-y rounded-xl border border-slate-200 bg-slate-50 p-3 font-sans text-sm text-slate-800 outline-none transition hover:border-slate-300 focus:border-brand-500 focus:ring-4 focus:ring-brand-500/10"
             />
           ) : (
             <p className="rounded-xl border border-dashed border-slate-200 bg-slate-50 py-8 text-center text-slate-500">
               No briefings yet
             </p>
           )}
-        </section>
+        </Card>
 
-        {/* History */}
-        <section className="mb-10 rounded-2xl border border-slate-200 bg-white p-5 shadow-sm">
+        <Card className="mb-10 p-6">
           <h2 className="mb-4 flex items-center gap-2 text-sm font-semibold uppercase tracking-wide text-slate-500">
             <History className="h-4 w-4" aria-hidden />
             Recent history
@@ -241,7 +238,7 @@ export default function Dashboard() {
               briefingHistory.map((b) => (
                 <li
                   key={b._id}
-                  className="flex items-center justify-between gap-3 rounded-xl border border-slate-100 bg-slate-50/80 px-3 py-2"
+                  className="flex items-center justify-between gap-3 rounded-xl border border-slate-100 bg-slate-50/80 px-3 py-2 transition hover:border-slate-200 hover:bg-slate-50"
                 >
                   <span className="text-sm text-slate-700">
                     {new Date(b.createdAt).toLocaleString(undefined, {
@@ -254,25 +251,22 @@ export default function Dashboard() {
               ))
             )}
           </ul>
-        </section>
+        </Card>
 
-        {/* Bottom links */}
         <footer className="flex flex-wrap items-center justify-between gap-4 border-t border-slate-200 pt-6 text-sm">
-          <Link
-            to="/setup"
-            className="inline-flex items-center gap-2 font-medium text-blue-600 hover:text-blue-500"
-          >
+          <Link to="/setup" className="inline-flex items-center gap-2 link-brand">
             <Settings className="h-4 w-4" aria-hidden />
             Edit preferences
           </Link>
-          <button
+          <Button
             type="button"
             onClick={handleLogout}
-            className="inline-flex items-center gap-2 font-medium text-slate-600 hover:text-slate-900"
+            variant="ghost"
+            size="sm"
           >
             <LogOut className="h-4 w-4" aria-hidden />
             Logout
-          </button>
+          </Button>
         </footer>
       </div>
     </div>

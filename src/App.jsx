@@ -12,7 +12,17 @@ export default function App() {
   return (
     <AuthProvider>
       <BrowserRouter>
-        <Toaster position="top-center" />
+        <Toaster
+          position="top-center"
+          toastOptions={{
+            style: {
+              borderRadius: "12px",
+              border: "1px solid #e2e8f0",
+              background: "#ffffff",
+              color: "#0f172a",
+            },
+          }}
+        />
         <Routes>
           <Route path="/register" element={<Register />} />
           <Route path="/login" element={<Login />} />

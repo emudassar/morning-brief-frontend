@@ -5,6 +5,10 @@ import toast from "react-hot-toast";
 import moment from "moment-timezone";
 import api from "../api/axios";
 import { useAuth } from "../context/AuthContext";
+import AuthShell from "../components/AuthShell";
+import Card from "../components/ui/Card";
+import Input from "../components/ui/Input";
+import Button from "../components/ui/Button";
 
 const COUNTRIES = [
   { code: "us", label: "United States" },
@@ -36,9 +40,16 @@ const selectStyles = {
     ...base,
     borderRadius: "0.75rem",
     borderColor: "#e2e8f0",
-    minHeight: "48px",
+    minHeight: "44px",
     boxShadow: "none",
+    transition: "all 0.2s ease",
     "&:hover": { borderColor: "#cbd5e1" },
+  }),
+  valueContainer: (base) => ({ ...base, padding: "0 10px" }),
+  option: (base, state) => ({
+    ...base,
+    backgroundColor: state.isFocused ? "#eef2ff" : "white",
+    color: "#0f172a",
   }),
   menu: (base) => ({ ...base, zIndex: 50 }),
 };
@@ -79,62 +90,47 @@ export default function Register() {
   }
 
   return (
-    <div className="min-h-full flex items-center justify-center bg-slate-50 px-4 py-12">
-      <div className="w-full max-w-md rounded-2xl bg-white p-8 shadow-lg ring-1 ring-slate-200">
-        <h1 className="text-2xl font-semibold text-slate-900 text-center">
-          Create your BriefAI account
-        </h1>
-        <p className="mt-2 text-center text-sm text-slate-500">
+    <AuthShell
+      title="Create your BriefAI account"
+      subtitle={
+        <>
           Already registered?{" "}
-          <Link to="/login" className="font-medium text-blue-600 hover:text-blue-500">
+          <Link to="/login" className="link-brand">
             Sign in
           </Link>
-        </p>
-
-        <form onSubmit={handleSubmit} className="mt-8 space-y-4">
-          <div>
-            <label htmlFor="email" className="block text-sm font-medium text-slate-700">
-              Email
-            </label>
-            <input
-              id="email"
-              type="email"
-              autoComplete="email"
-              required
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
-              className="mt-1 w-full rounded-xl border border-slate-200 px-3 py-2.5 text-slate-900 outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20"
-            />
-          </div>
-          <div>
-            <label htmlFor="password" className="block text-sm font-medium text-slate-700">
-              Password
-            </label>
-            <input
-              id="password"
-              type="password"
-              autoComplete="new-password"
-              required
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
-              className="mt-1 w-full rounded-xl border border-slate-200 px-3 py-2.5 text-slate-900 outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20"
-            />
-          </div>
-          <div>
-            <label htmlFor="city" className="block text-sm font-medium text-slate-700">
-              City
-            </label>
-            <input
-              id="city"
-              type="text"
-              required
-              value={city}
-              onChange={(e) => setCity(e.target.value)}
-              placeholder="For weather"
-              className="mt-1 w-full rounded-xl border border-slate-200 px-3 py-2.5 text-slate-900 outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20"
-            />
-          </div>
-          <div>
+        </>
+      }
+    >
+      <Card className="p-8 sm:p-10">
+        <form onSubmit={handleSubmit} className="space-y-4">
+          <Input
+            id="email"
+            type="email"
+            autoComplete="email"
+            required
+            label="Email"
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
+          />
+          <Input
+            id="password"
+            type="password"
+            autoComplete="new-password"
+            required
+            label="Password"
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
+          />
+          <Input
+            id="city"
+            type="text"
+            required
+            label="City"
+            value={city}
+            onChange={(e) => setCity(e.target.value)}
+            placeholder="For weather updates"
+          />
+          <div className="space-y-2">
             <label htmlFor="country" className="block text-sm font-medium text-slate-700">
               Country
             </label>
@@ -142,7 +138,7 @@ export default function Register() {
               id="country"
               value={country}
               onChange={(e) => setCountry(e.target.value)}
-              className="mt-1 w-full rounded-xl border border-slate-200 bg-white px-3 py-2.5 text-slate-900 outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20"
+              className="w-full rounded-xl border border-slate-200 bg-white px-4 py-2.5 text-sm text-slate-900 outline-none transition duration-200 hover:border-slate-300 focus:border-brand-500 focus:ring-4 focus:ring-brand-500/10"
             >
               {COUNTRIES.map((c) => (
                 <option key={c.code} value={c.code}>
@@ -151,8 +147,8 @@ export default function Register() {
               ))}
             </select>
           </div>
-          <div>
-            <label className="block text-sm font-medium text-slate-700 mb-1">Timezone</label>
+          <div className="space-y-2">
+            <label className="block text-sm font-medium text-slate-700">Timezone</label>
             <Select
               options={tzOptions}
               value={timezone}
@@ -162,22 +158,11 @@ export default function Register() {
               placeholder="Search timezone..."
             />
           </div>
-
-          <button
-            type="submit"
-            disabled={loading}
-            className="flex w-full items-center justify-center gap-2 rounded-xl bg-blue-600 py-3 font-medium text-white transition hover:bg-blue-700 disabled:cursor-not-allowed disabled:opacity-60"
-          >
-            {loading && (
-              <span
-                className="inline-block h-5 w-5 animate-spin rounded-full border-2 border-white border-t-transparent"
-                aria-hidden
-              />
-            )}
-            {loading ? "Creating account…" : "Continue"}
-          </button>
+          <Button type="submit" loading={loading} className="w-full" size="lg">
+            {loading ? "Creating account..." : "Continue"}
+          </Button>
         </form>
-      </div>
-    </div>
+      </Card>
+    </AuthShell>
   );
 }

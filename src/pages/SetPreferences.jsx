@@ -5,6 +5,9 @@ import toast from "react-hot-toast";
 import moment from "moment-timezone";
 import api from "../api/axios";
 import { useAuth } from "../context/AuthContext";
+import Card from "../components/ui/Card";
+import Input from "../components/ui/Input";
+import Button from "../components/ui/Button";
 
 const tzOptions = moment.tz.names().map((name) => ({ value: name, label: name }));
 
@@ -13,9 +16,16 @@ const selectStyles = {
     ...base,
     borderRadius: "0.75rem",
     borderColor: "#e2e8f0",
-    minHeight: "48px",
+    minHeight: "44px",
     boxShadow: "none",
+    transition: "all 0.2s ease",
     "&:hover": { borderColor: "#cbd5e1" },
+  }),
+  valueContainer: (base) => ({ ...base, padding: "0 10px" }),
+  option: (base, state) => ({
+    ...base,
+    backgroundColor: state.isFocused ? "#eef2ff" : "white",
+    color: "#0f172a",
   }),
   menu: (base) => ({ ...base, zIndex: 50 }),
 };
@@ -32,7 +42,7 @@ function defaultModules() {
 
 function ToggleRow({ label, checked, onChange, badge }) {
   return (
-    <label className="flex cursor-pointer items-center justify-between gap-3 rounded-xl border border-slate-200 bg-white px-4 py-3 hover:bg-slate-50">
+    <label className="flex cursor-pointer items-center justify-between gap-3 rounded-xl border border-slate-200/80 bg-white px-4 py-3 transition hover:border-slate-300 hover:bg-slate-50">
       <span className="flex items-center gap-2 text-sm font-medium text-slate-800">
         {label}
         {badge}
@@ -41,7 +51,7 @@ function ToggleRow({ label, checked, onChange, badge }) {
         type="checkbox"
         checked={checked}
         onChange={(e) => onChange(e.target.checked)}
-        className="h-5 w-5 rounded border-slate-300 text-blue-600 focus:ring-blue-500"
+        className="h-5 w-5 rounded border-slate-300 text-brand-600 focus:ring-brand-500"
       />
     </label>
   );
@@ -121,31 +131,26 @@ export default function SetPreferences() {
 
   if (loading) {
     return (
-      <div className="min-h-full flex items-center justify-center bg-slate-50">
-        <div className="h-10 w-10 animate-spin rounded-full border-2 border-slate-200 border-t-blue-600" />
+      <div className="app-shell flex min-h-full items-center justify-center">
+        <div className="h-10 w-10 animate-spin rounded-full border-2 border-slate-200 border-t-brand-600" />
       </div>
     );
   }
 
   return (
-    <div className="min-h-full flex items-center justify-center bg-slate-50 px-4 py-12">
-      <div className="w-full max-w-lg rounded-2xl bg-white p-8 shadow-lg ring-1 ring-slate-200">
-        <h1 className="text-2xl font-semibold text-slate-900">Set your briefing</h1>
-        <p className="mt-2 text-sm text-slate-500">{preview}</p>
+    <div className="app-shell flex min-h-full items-center justify-center px-4 py-8">
+      <Card className="w-full max-w-xl p-8 sm:p-10">
+        <h1 className="text-3xl font-bold tracking-tightest">Set your briefing</h1>
+        <p className="mt-2 text-sm text-muted">{preview}</p>
 
         <form onSubmit={handleSubmit} className="mt-8 space-y-6">
-          <div>
-            <label htmlFor="briefingTime" className="block text-sm font-medium text-slate-700">
-              Daily briefing time
-            </label>
-            <input
-              id="briefingTime"
-              type="time"
-              value={briefingTime}
-              onChange={(e) => setBriefingTime(e.target.value)}
-              className="mt-1 w-full rounded-xl border border-slate-200 px-3 py-2.5 text-slate-900 outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20"
-            />
-          </div>
+          <Input
+            id="briefingTime"
+            type="time"
+            label="Daily briefing time"
+            value={briefingTime}
+            onChange={(e) => setBriefingTime(e.target.value)}
+          />
 
           <div>
             <label className="mb-1 block text-sm font-medium text-slate-700">Timezone</label>
@@ -175,7 +180,7 @@ export default function SetPreferences() {
               checked={modules.calendar}
               onChange={(v) => setModules((m) => ({ ...m, calendar: v }))}
               badge={
-                <span className="rounded bg-amber-100 px-2 py-0.5 text-xs font-medium text-amber-800">
+                <span className="rounded-full bg-amber-100 px-2 py-0.5 text-xs font-medium text-amber-800">
                   Phase 2
                 </span>
               }
@@ -192,18 +197,11 @@ export default function SetPreferences() {
             />
           </div>
 
-          <button
-            type="submit"
-            disabled={saving}
-            className="flex w-full items-center justify-center gap-2 rounded-xl bg-blue-600 py-3 font-medium text-white transition hover:bg-blue-700 disabled:cursor-not-allowed disabled:opacity-60"
-          >
-            {saving && (
-              <span className="inline-block h-5 w-5 animate-spin rounded-full border-2 border-white border-t-transparent" />
-            )}
-            {saving ? "Saving…" : "Save & go to dashboard"}
-          </button>
+          <Button type="submit" loading={saving} className="w-full" size="lg">
+            {saving ? "Saving..." : "Save & go to dashboard"}
+          </Button>
         </form>
-      </div>
+      </Card>
     </div>
   );
 }
