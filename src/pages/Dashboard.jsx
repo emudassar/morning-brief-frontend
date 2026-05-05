@@ -36,6 +36,8 @@ export default function Dashboard() {
   const { user, setUser, logout } = useAuth();
   const [latestBriefing, setLatestBriefing] = useState(null);
   const [briefingHistory, setBriefingHistory] = useState([]);
+  const [subscriptionStatus, setSubscriptionStatus] = useState(null);
+  const [dismissedSubscriptionBanner, setDismissedSubscriptionBanner] = useState(false);
   const [loading, setLoading] = useState(true);
   const [sendLoading, setSendLoading] = useState(false);
   const [toggleLoading, setToggleLoading] = useState(false);
@@ -43,14 +45,17 @@ export default function Dashboard() {
 
   const loadData = useCallback(async () => {
     try {
-      const [meRes, latestRes, histRes] = await Promise.all([
+      const [meRes, latestRes, histRes, subRes] = await Promise.all([
         api.get("/api/user/me"),
         api.get("/api/briefing/latest"),
         api.get("/api/briefing/history", { params: { limit: 7 } }),
+        api.get("/api/user/subscription"),
       ]);
       setUser(meRes.data);
       setLatestBriefing(latestRes.data);
       setBriefingHistory(Array.isArray(histRes.data) ? histRes.data : []);
+      setSubscriptionStatus(subRes.data || null);
+      setDismissedSubscriptionBanner(false);
     } catch {
       toast.error("Could not load dashboard");
     } finally {
@@ -126,6 +131,118 @@ export default function Dashboard() {
   const active = !!user.isActive;
   const linked = !!user.telegramChatId;
   const firstName = (user.email || "there").split("@")[0];
+  const now = Date.now();
+  const startOfWeek = (() => {
+    const d = new Date();
+    d.setHours(0, 0, 0, 0);
+    d.setDate(d.getDate() - d.getDay());
+    return d;
+  })();
+  const fallbackBriefingsThisWeek = briefingHistory.filter((b) => {
+    if (!b?.createdAt) return false;
+    return new Date(b.createdAt).getTime() >= startOfWeek.getTime();
+  }).length;
+  const briefingsThisWeek = subscriptionStatus?.briefingsThisWeek ?? fallbackBriefingsThisWeek;
+
+  const plan = subscriptionStatus?.plan;
+  const trialDaysRemaining = Number(subscriptionStatus?.trialDaysRemaining ?? 0);
+  const cancelAtPeriodEnd = !!subscriptionStatus?.cancelAtPeriodEnd;
+  const currentPeriodEnd = subscriptionStatus?.currentPeriodEnd
+    ? new Date(subscriptionStatus.currentPeriodEnd)
+    : null;
+
+  let subscriptionBanner = null;
+
+  if (!dismissedSubscriptionBanner && plan === "trial" && trialDaysRemaining > 0) {
+    subscriptionBanner = (
+      <Card className="flex items-start justify-between gap-3 border-yellow-200 bg-yellow-50 p-4 text-sm text-yellow-900">
+        <p>
+          {"\u23f3"} Your free trial ends in {trialDaysRemaining} day(s).{" "}
+          <Link to="/pricing" className="font-semibold underline">
+            Upgrade
+          </Link>{" "}
+          to keep daily briefings {"\u2192"}
+        </p>
+        <button
+          type="button"
+          onClick={() => setDismissedSubscriptionBanner(true)}
+          className="rounded-md p-1 text-yellow-700 transition hover:bg-yellow-100"
+          aria-label="Dismiss subscription banner"
+        >
+          <X className="h-4 w-4" />
+        </button>
+      </Card>
+    );
+  } else if (!dismissedSubscriptionBanner && plan === "trial" && trialDaysRemaining === 0) {
+    subscriptionBanner = (
+      <Card className="flex items-start justify-between gap-3 border-rose-200 bg-rose-50 p-4 text-sm text-rose-900">
+        <p>
+          {"\ud83d\udd12"} Your free trial has ended. You're now on the free plan (3 briefings/week).{" "}
+          <Link to="/pricing" className="font-semibold underline">
+            Upgrade
+          </Link>{" "}
+          to restore daily access {"\u2192"}
+        </p>
+        <button
+          type="button"
+          onClick={() => setDismissedSubscriptionBanner(true)}
+          className="rounded-md p-1 text-rose-700 transition hover:bg-rose-100"
+          aria-label="Dismiss subscription banner"
+        >
+          <X className="h-4 w-4" />
+        </button>
+      </Card>
+    );
+  } else if (!dismissedSubscriptionBanner && plan === "free") {
+    subscriptionBanner = (
+      <Card className="flex items-start justify-between gap-3 border-slate-200 bg-slate-50 p-4 text-sm text-slate-700">
+        <p>
+          Free plan: {briefingsThisWeek}/3 briefings used this week.{" "}
+          <Link to="/pricing" className="font-semibold underline">
+            Upgrade
+          </Link>{" "}
+          for unlimited {"\u2192"}
+        </p>
+        <button
+          type="button"
+          onClick={() => setDismissedSubscriptionBanner(true)}
+          className="rounded-md p-1 text-slate-500 transition hover:bg-slate-100"
+          aria-label="Dismiss subscription banner"
+        >
+          <X className="h-4 w-4" />
+        </button>
+      </Card>
+    );
+  } else if (
+    !dismissedSubscriptionBanner &&
+    (plan === "monthly" || plan === "yearly") &&
+    cancelAtPeriodEnd &&
+    currentPeriodEnd &&
+    now <= currentPeriodEnd.getTime()
+  ) {
+    subscriptionBanner = (
+      <Card className="flex items-start justify-between gap-3 border-amber-200 bg-amber-50 p-4 text-sm text-amber-900">
+        <p>
+          Your subscription is cancelled. Access continues until{" "}
+          {currentPeriodEnd.toLocaleDateString(undefined, {
+            weekday: "long",
+            month: "long",
+            day: "numeric",
+            year: "numeric",
+          })}
+          .
+        </p>
+        <button
+          type="button"
+          onClick={() => setDismissedSubscriptionBanner(true)}
+          className="rounded-md p-1 text-amber-700 transition hover:bg-amber-100"
+          aria-label="Dismiss subscription banner"
+        >
+          <X className="h-4 w-4" />
+        </button>
+      </Card>
+    );
+  }
 
   return (
     <div className="app-shell min-h-full px-4 py-8">
@@ -196,6 +313,8 @@ export default function Dashboard() {
         </aside>
 
         <main className="space-y-6">
+          {subscriptionBanner}
+
           <Card className="flex flex-wrap items-center justify-between gap-4 p-6">
             <div>
               <p className="text-sm text-muted">Good morning,</p>

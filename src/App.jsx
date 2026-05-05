@@ -8,6 +8,7 @@ import ConnectTelegram from "./pages/ConnectTelegram.jsx";
 import SetPreferences from "./pages/SetPreferences.jsx";
 import Dashboard from "./pages/Dashboard.jsx";
 import Landing from "./pages/Landing.jsx";
+import Pricing from "./pages/Pricing.jsx";
 
 export default function App() {
   return (
@@ -41,6 +42,7 @@ export default function App() {
         />
         <Routes>
           <Route path="/" element={<Landing />} />
+          <Route path="/pricing" element={<Pricing />} />
           <Route path="/register" element={<Register />} />
           <Route path="/login" element={<Login />} />
           <Route
