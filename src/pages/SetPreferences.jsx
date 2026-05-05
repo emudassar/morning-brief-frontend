@@ -1,9 +1,21 @@
 import { useEffect, useMemo, useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import Select from "react-select";
 import toast from "react-hot-toast";
 import moment from "moment-timezone";
-import { Bitcoin, CalendarDays, Clock3, CloudSun, Globe2, Newspaper, Quote } from "lucide-react";
+import {
+  Bitcoin,
+  CalendarDays,
+  Clock3,
+  CloudSun,
+  Globe2,
+  History,
+  LayoutDashboard,
+  LogOut,
+  Newspaper,
+  Quote,
+  Settings,
+} from "lucide-react";
 import api from "../api/axios";
 import { useAuth } from "../context/AuthContext";
 import Card from "../components/ui/Card";
@@ -73,7 +85,7 @@ function ToggleRow({ label, checked, onChange, badge }) {
 
 export default function SetPreferences() {
   const navigate = useNavigate();
-  const { token, setUser } = useAuth();
+  const { token, setUser, logout } = useAuth();
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
   const [briefingTime, setBriefingTime] = useState("08:00");
@@ -144,6 +156,11 @@ export default function SetPreferences() {
     }
   }
 
+  function handleLogout() {
+    logout();
+    navigate("/login");
+  }
+
   if (loading) {
     return (
       <div className="app-shell flex min-h-full items-center justify-center px-4 py-8">
@@ -165,90 +182,129 @@ export default function SetPreferences() {
   }
 
   return (
-    <div className="app-shell flex min-h-full items-center justify-center px-4 py-8">
-      <div className="w-full max-w-3xl space-y-6">
-        <Card className="p-8">
-          <div className="mb-3 flex items-center gap-2 rounded-full bg-slate-100 px-3 py-1 text-xs font-medium text-slate-600">
-            <span className="rounded-full bg-brand-600 px-2 py-0.5 text-[10px] text-white">Step 3 / 3</span>
-            Finalize preferences
-          </div>
-          <h1 className="text-3xl font-bold tracking-tightest">Set your briefing</h1>
-          <p className="mt-2 rounded-xl bg-brand-50 px-3 py-2 text-sm text-brand-700 ring-1 ring-brand-100">{preview}</p>
-        </Card>
+    <div className="app-shell min-h-full px-4 py-8">
+      <div className="mx-auto grid w-full max-w-7xl grid-cols-1 gap-6 lg:grid-cols-[240px_1fr]">
+        <aside className="lg:sticky lg:top-8 lg:h-fit">
+          <Card className="p-4">
+            <p className="px-2 pb-3 text-xs font-semibold uppercase tracking-wide text-slate-400">Workspace</p>
+            <nav className="space-y-1.5">
+              <Link
+                to="/dashboard"
+                className="flex items-center gap-2 rounded-xl px-3 py-2 text-sm font-medium text-slate-600 transition hover:bg-slate-100 hover:text-slate-900"
+              >
+                <LayoutDashboard className="h-4 w-4" />
+                Dashboard
+              </Link>
+              <div
+                className="flex items-center gap-2 rounded-xl bg-brand-50 px-3 py-2 text-sm font-medium text-brand-700"
+                aria-current="page"
+              >
+                <Settings className="h-4 w-4" />
+                Settings
+              </div>
+              <Link
+                to="/dashboard#history"
+                className="flex items-center gap-2 rounded-xl px-3 py-2 text-sm font-medium text-slate-600 transition hover:bg-slate-100 hover:text-slate-900"
+              >
+                <History className="h-4 w-4" />
+                History
+              </Link>
+              <button
+                type="button"
+                onClick={handleLogout}
+                className="flex w-full items-center gap-2 rounded-xl px-3 py-2 text-sm font-medium text-slate-600 transition hover:bg-slate-100 hover:text-slate-900"
+              >
+                <LogOut className="h-4 w-4" />
+                Logout
+              </button>
+            </nav>
+          </Card>
+        </aside>
 
-        <form onSubmit={handleSubmit} className="space-y-6">
-          <Card className="p-6 sm:p-8">
-            <h2 className="text-xl font-semibold text-slate-900">Time & Timezone</h2>
-            <div className="mt-5 grid gap-4 sm:grid-cols-2">
-              <div className="space-y-2">
-                <div className="mb-1 flex items-center gap-2 text-sm font-medium text-slate-700">
-                  <Clock3 className="h-4 w-4 text-brand-600" />
-                  Daily briefing time
-                </div>
-                <Input
-                  id="briefingTime"
-                  type="time"
-                  value={briefingTime}
-                  onChange={(e) => setBriefingTime(e.target.value)}
-                />
-              </div>
-              <div className="space-y-2">
-                <div className="mb-1 flex items-center gap-2 text-sm font-medium text-slate-700">
-                  <Globe2 className="h-4 w-4 text-brand-600" />
-                  Timezone
-                </div>
-                <Select
-                  options={tzOptions}
-                  value={timezone}
-                  onChange={(v) => v && setTimezone(v)}
-                  styles={selectStyles}
-                  isSearchable
-                />
-              </div>
+        <main className="space-y-6">
+          <Card className="p-8">
+            <div className="mb-3 flex items-center gap-2 rounded-full bg-slate-100 px-3 py-1 text-xs font-medium text-slate-600">
+              <span className="rounded-full bg-brand-600 px-2 py-0.5 text-[10px] text-white">Step 3 / 3</span>
+              Finalize preferences
             </div>
+            <h1 className="text-3xl font-bold tracking-tightest">Set your briefing</h1>
+            <p className="mt-2 rounded-xl bg-brand-50 px-3 py-2 text-sm text-brand-700 ring-1 ring-brand-100">{preview}</p>
           </Card>
 
-          <Card className="p-6 sm:p-8">
-            <h2 className="text-xl font-semibold text-slate-900">Modules</h2>
-            <p className="mt-1 text-sm text-muted">Choose what appears in your daily briefing.</p>
-            <div className="mt-5 space-y-2">
-            <ToggleRow
-              label={{ text: "Weather", icon: <CloudSun className="h-4 w-4 text-brand-600" /> }}
-              checked={modules.weather}
-              onChange={(v) => setModules((m) => ({ ...m, weather: v }))}
-            />
-            <ToggleRow
-              label={{ text: "News", icon: <Newspaper className="h-4 w-4 text-brand-600" /> }}
-              checked={modules.news}
-              onChange={(v) => setModules((m) => ({ ...m, news: v }))}
-            />
-            <ToggleRow
-              label={{ text: "Calendar", icon: <CalendarDays className="h-4 w-4 text-brand-600" /> }}
-              checked={modules.calendar}
-              onChange={(v) => setModules((m) => ({ ...m, calendar: v }))}
-              badge={
-                <span className="rounded-full bg-amber-100 px-2 py-0.5 text-xs font-medium text-amber-800">
-                  Phase 2
-                </span>
-              }
-            />
-            <ToggleRow
-              label={{ text: "Crypto", icon: <Bitcoin className="h-4 w-4 text-brand-600" /> }}
-              checked={modules.crypto}
-              onChange={(v) => setModules((m) => ({ ...m, crypto: v }))}
-            />
-            <ToggleRow
-              label={{ text: "Quote", icon: <Quote className="h-4 w-4 text-brand-600" /> }}
-              checked={modules.quote}
-              onChange={(v) => setModules((m) => ({ ...m, quote: v }))}
-            />
-          </div>
-          </Card>
+          <form onSubmit={handleSubmit} className="space-y-6">
+            <Card className="p-6 sm:p-8">
+              <h2 className="text-xl font-semibold text-slate-900">Time & Timezone</h2>
+              <div className="mt-5 grid gap-4 sm:grid-cols-2">
+                <div className="space-y-2">
+                  <div className="mb-1 flex items-center gap-2 text-sm font-medium text-slate-700">
+                    <Clock3 className="h-4 w-4 text-brand-600" />
+                    Daily briefing time
+                  </div>
+                  <Input
+                    id="briefingTime"
+                    type="time"
+                    value={briefingTime}
+                    onChange={(e) => setBriefingTime(e.target.value)}
+                  />
+                </div>
+                <div className="space-y-2">
+                  <div className="mb-1 flex items-center gap-2 text-sm font-medium text-slate-700">
+                    <Globe2 className="h-4 w-4 text-brand-600" />
+                    Timezone
+                  </div>
+                  <Select
+                    options={tzOptions}
+                    value={timezone}
+                    onChange={(v) => v && setTimezone(v)}
+                    styles={selectStyles}
+                    isSearchable
+                  />
+                </div>
+              </div>
+            </Card>
 
-          <Button type="submit" loading={saving} className="w-full" size="lg">
-            {saving ? "Saving..." : "Save & go to dashboard"}
-          </Button>
-        </form>
+            <Card className="p-6 sm:p-8">
+              <h2 className="text-xl font-semibold text-slate-900">Modules</h2>
+              <p className="mt-1 text-sm text-muted">Choose what appears in your daily briefing.</p>
+              <div className="mt-5 space-y-2">
+                <ToggleRow
+                  label={{ text: "Weather", icon: <CloudSun className="h-4 w-4 text-brand-600" /> }}
+                  checked={modules.weather}
+                  onChange={(v) => setModules((m) => ({ ...m, weather: v }))}
+                />
+                <ToggleRow
+                  label={{ text: "News", icon: <Newspaper className="h-4 w-4 text-brand-600" /> }}
+                  checked={modules.news}
+                  onChange={(v) => setModules((m) => ({ ...m, news: v }))}
+                />
+                <ToggleRow
+                  label={{ text: "Calendar", icon: <CalendarDays className="h-4 w-4 text-brand-600" /> }}
+                  checked={modules.calendar}
+                  onChange={(v) => setModules((m) => ({ ...m, calendar: v }))}
+                  badge={
+                    <span className="rounded-full bg-amber-100 px-2 py-0.5 text-xs font-medium text-amber-800">
+                      Phase 2
+                    </span>
+                  }
+                />
+                <ToggleRow
+                  label={{ text: "Crypto", icon: <Bitcoin className="h-4 w-4 text-brand-600" /> }}
+                  checked={modules.crypto}
+                  onChange={(v) => setModules((m) => ({ ...m, crypto: v }))}
+                />
+                <ToggleRow
+                  label={{ text: "Quote", icon: <Quote className="h-4 w-4 text-brand-600" /> }}
+                  checked={modules.quote}
+                  onChange={(v) => setModules((m) => ({ ...m, quote: v }))}
+                />
+              </div>
+            </Card>
+
+            <Button type="submit" loading={saving} className="w-full" size="lg">
+              {saving ? "Saving..." : "Save & go to dashboard"}
+            </Button>
+          </form>
+        </main>
       </div>
     </div>
   );
