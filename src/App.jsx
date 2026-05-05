@@ -16,11 +16,26 @@ export default function App() {
         <Toaster
           position="top-center"
           toastOptions={{
+            duration: 3000,
             style: {
               borderRadius: "12px",
               border: "1px solid #e2e8f0",
               background: "#ffffff",
               color: "#0f172a",
+              transition: "all 300ms ease",
+              boxShadow: "0 8px 24px rgba(15, 23, 42, 0.12)",
+            },
+            success: {
+              iconTheme: {
+                primary: "#16a34a",
+                secondary: "#ffffff",
+              },
+            },
+            error: {
+              iconTheme: {
+                primary: "#dc2626",
+                secondary: "#ffffff",
+              },
             },
           }}
         />

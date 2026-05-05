@@ -8,9 +8,9 @@ const bullets = [
 
 export default function AuthShell({ title, subtitle, children }) {
   return (
-    <div className="app-shell min-h-full bg-gradient-to-b from-indigo-50/70 via-slate-50 to-slate-100">
+    <div className="app-shell min-h-full">
       <div className="mx-auto grid min-h-full w-full max-w-6xl items-stretch gap-6 px-4 py-8 lg:grid-cols-2 lg:gap-8 lg:px-8">
-        <section className="hidden overflow-hidden rounded-3xl border border-indigo-100/70 bg-brand-gradient p-10 text-white shadow-premium lg:flex lg:flex-col lg:justify-between">
+        <section className="hidden overflow-hidden rounded-3xl border border-indigo-100/70 bg-brand-gradient p-10 text-white shadow-sm lg:flex lg:flex-col lg:justify-between">
           <div className="inline-flex w-fit items-center gap-2 rounded-full bg-white/15 px-3 py-1 text-xs font-medium backdrop-blur">
             <Sparkles className="h-4 w-4" />
             Morning Briefing Agent
@@ -42,7 +42,7 @@ export default function AuthShell({ title, subtitle, children }) {
         </section>
 
         <section className="flex items-center justify-center">
-          <div className="auth-fade-in w-full max-w-md rounded-3xl border border-white/60 bg-white/65 p-8 shadow-premium backdrop-blur-xl sm:p-10">
+          <div className="auth-fade-in w-full max-w-md rounded-3xl border border-slate-200/80 bg-white p-8 shadow-sm sm:p-10">
             <div className="mb-6 space-y-2 text-center">
               <h1 className="text-3xl font-bold tracking-tightest">{title}</h1>
               {subtitle ? <p className="text-sm text-muted">{subtitle}</p> : null}

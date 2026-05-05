@@ -9,8 +9,12 @@ body,
 }
 
 @layer base {
+  html {
+    -webkit-text-size-adjust: 100%;
+  }
+
   body {
-    @apply bg-surface text-slate-700 antialiased;
+    @apply bg-surface text-sm text-slate-700 antialiased sm:text-base;
   }
 
   h1,
@@ -18,6 +22,26 @@ body,
   h3,
   h4 {
     @apply tracking-tightest text-slate-900;
+  }
+
+  p {
+    @apply leading-relaxed;
+  }
+
+  a,
+  button,
+  input,
+  select,
+  textarea {
+    @apply transition-all duration-300;
+  }
+
+  a:focus-visible,
+  button:focus-visible,
+  input:focus-visible,
+  select:focus-visible,
+  textarea:focus-visible {
+    @apply outline-none ring-2 ring-brand-500/30;
   }
 }
 
@@ -32,7 +56,7 @@ body,
   }
 
   .card-premium {
-    @apply rounded-2xl border border-slate-200/70 bg-white shadow-soft;
+    @apply rounded-2xl border border-slate-200/70 bg-white shadow-soft transition-all duration-300;
   }
 
   .link-brand {
@@ -41,6 +65,18 @@ body,
 
   .text-muted {
     @apply text-slate-500;
+  }
+
+  .interactive {
+    @apply transition-all duration-300;
+  }
+
+  .section-title {
+    @apply text-2xl font-bold tracking-tightest text-slate-900 sm:text-3xl;
+  }
+
+  .section-subtitle {
+    @apply text-sm text-slate-500 sm:text-base;
   }
 
   .auth-fade-in {

@@ -6,23 +6,27 @@ import {
   CalendarClock,
   LayoutDashboard,
   History,
+  Inbox,
   Loader2,
   LogOut,
+  Menu,
   MessageCircle,
   Pause,
   Play,
   Send,
   Settings,
+  X,
 } from "lucide-react";
 import api from "../api/axios";
 import { useAuth } from "../context/AuthContext";
 import Card from "../components/ui/Card";
 import Button from "../components/ui/Button";
+import { DashboardSkeleton } from "../components/ui/Skeleton";
 
 function StatusBadge({ status }) {
   const base = "rounded-full px-2 py-0.5 text-xs font-medium";
   if (status === "sent") return <span className={`${base} bg-emerald-100 text-emerald-800`}>sent</span>;
-  if (status === "failed") return <span className={`${base} bg-red-100 text-red-800`}>failed</span>;
+  if (status === "failed") return <span className={`${base} bg-rose-100 text-rose-700`}>failed</span>;
   return <span className={`${base} bg-slate-100 text-slate-600`}>{status}</span>;
 }
 
@@ -34,6 +38,7 @@ export default function Dashboard() {
   const [loading, setLoading] = useState(true);
   const [sendLoading, setSendLoading] = useState(false);
   const [toggleLoading, setToggleLoading] = useState(false);
+  const [sidebarOpen, setSidebarOpen] = useState(false);
 
   const loadData = useCallback(async () => {
     try {
@@ -100,16 +105,13 @@ export default function Dashboard() {
   }
 
   function handleLogout() {
+    setSidebarOpen(false);
     logout();
     navigate("/login");
   }
 
   if (loading || !user) {
-    return (
-      <div className="app-shell flex min-h-full items-center justify-center">
-        <Loader2 className="h-10 w-10 animate-spin text-brand-600" aria-label="Loading" />
-      </div>
-    );
+    return <DashboardSkeleton />;
   }
 
   const active = !!user.isActive;
@@ -118,17 +120,37 @@ export default function Dashboard() {
 
   return (
     <div className="app-shell min-h-full px-4 py-8">
-      <div className="mx-auto grid w-full max-w-7xl gap-6 lg:grid-cols-[240px_1fr]">
-        <aside className="lg:sticky lg:top-8 lg:h-fit">
+      <div className="mx-auto mb-4 flex w-full max-w-7xl items-center justify-between lg:hidden">
+        <h1 className="text-lg font-semibold">Dashboard</h1>
+        <button
+          type="button"
+          onClick={() => setSidebarOpen((v) => !v)}
+          className="inline-flex h-10 w-10 items-center justify-center rounded-xl border border-slate-200 bg-white text-slate-700 transition hover:bg-slate-50"
+          aria-label="Toggle sidebar"
+        >
+          {sidebarOpen ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}
+        </button>
+      </div>
+
+      <div className="mx-auto grid w-full max-w-7xl grid-cols-1 gap-6 lg:grid-cols-[240px_1fr]">
+        <aside
+          className={`${
+            sidebarOpen ? "block" : "hidden"
+          } lg:block lg:sticky lg:top-8 lg:h-fit`}
+        >
           <Card className="p-4">
             <p className="px-2 pb-3 text-xs font-semibold uppercase tracking-wide text-slate-400">Workspace</p>
             <nav className="space-y-1.5">
-              <div className="flex items-center gap-2 rounded-xl bg-brand-50 px-3 py-2 text-sm font-medium text-brand-700">
+              <div
+                className="flex items-center gap-2 rounded-xl bg-brand-50 px-3 py-2 text-sm font-medium text-brand-700"
+                aria-current="page"
+              >
                 <LayoutDashboard className="h-4 w-4" />
                 Dashboard
               </div>
               <Link
                 to="/setup"
+                onClick={() => setSidebarOpen(false)}
                 className="flex items-center gap-2 rounded-xl px-3 py-2 text-sm font-medium text-slate-600 transition hover:bg-slate-100 hover:text-slate-900"
               >
                 <Settings className="h-4 w-4" />
@@ -136,6 +158,7 @@ export default function Dashboard() {
               </Link>
               <a
                 href="#history"
+                onClick={() => setSidebarOpen(false)}
                 className="flex items-center gap-2 rounded-xl px-3 py-2 text-sm font-medium text-slate-600 transition hover:bg-slate-100 hover:text-slate-900"
               >
                 <History className="h-4 w-4" />
@@ -157,7 +180,7 @@ export default function Dashboard() {
           <Card className="flex flex-wrap items-center justify-between gap-4 p-6">
             <div>
               <p className="text-sm text-muted">Good morning,</p>
-              <h1 className="text-2xl font-bold tracking-tightest capitalize">{firstName}</h1>
+              <h1 className="text-xl font-bold tracking-tightest capitalize sm:text-2xl">{firstName}</h1>
               <p className="mt-1 flex items-center gap-2 text-sm text-slate-600">
                 <CalendarClock className="h-4 w-4 text-brand-600" />
                 Next briefing: {user.briefingTime} - {user.timezone}
@@ -229,9 +252,11 @@ export default function Dashboard() {
                   className="w-full resize-y rounded-xl border border-slate-200 bg-slate-50 p-3 font-sans text-sm text-slate-800 outline-none transition hover:border-slate-300 focus:border-brand-500 focus:ring-4 focus:ring-brand-500/10"
                 />
               ) : (
-                <p className="rounded-xl border border-dashed border-slate-200 bg-slate-50 py-8 text-center text-slate-500">
-                  No briefings yet
-                </p>
+                <div className="rounded-xl border border-dashed border-slate-200 bg-slate-50 py-8 text-center">
+                  <Inbox className="mx-auto h-6 w-6 text-slate-400" />
+                  <p className="mt-2 text-sm text-slate-500">No briefings yet.</p>
+                  <p className="mt-1 text-xs text-slate-400">Generate your first one using Send Now.</p>
+                </div>
               )}
             </Card>
           </section>
@@ -260,7 +285,9 @@ export default function Dashboard() {
               </h2>
               <ul className="space-y-3">
                 {briefingHistory.length === 0 ? (
-                  <li className="text-sm text-slate-500">No history yet.</li>
+                  <li className="rounded-xl border border-dashed border-slate-200 bg-slate-50 py-6 text-center text-sm text-slate-500">
+                    No history yet. Your activity will appear here.
+                  </li>
                 ) : (
                   briefingHistory.map((b) => (
                     <li

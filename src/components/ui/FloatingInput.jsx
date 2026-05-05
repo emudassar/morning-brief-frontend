@@ -18,6 +18,8 @@ export default function FloatingInput({
     return showPassword ? "text" : "password";
   }, [isPassword, type, showPassword]);
 
+  const errorId = error ? `${id}-error` : undefined;
+
   return (
     <div className="space-y-1.5">
       <div className="relative">
@@ -27,7 +29,9 @@ export default function FloatingInput({
           value={value}
           onChange={onChange}
           placeholder=" "
-          className={`peer w-full rounded-xl border bg-white/80 px-4 pb-2.5 pt-5 text-sm text-slate-900 outline-none transition duration-200 placeholder:text-transparent hover:border-slate-300 focus:bg-white focus:ring-4 ${
+          aria-invalid={!!error}
+          aria-describedby={errorId}
+          className={`peer w-full rounded-xl border bg-white/80 px-4 pb-2.5 pt-5 text-sm text-slate-900 outline-none transition duration-300 placeholder:text-transparent hover:border-slate-300 focus:bg-white focus:ring-4 ${
             error
               ? "border-rose-300 focus:border-rose-500 focus:ring-rose-500/10"
               : "border-slate-200 focus:border-brand-500 focus:ring-brand-500/10"
@@ -36,7 +40,7 @@ export default function FloatingInput({
         />
         <label
           htmlFor={id}
-          className="pointer-events-none absolute left-4 top-1/2 -translate-y-1/2 bg-white/95 px-1 text-sm text-slate-500 transition-all duration-200 peer-focus:top-0 peer-focus:text-xs peer-focus:text-brand-600 peer-[:not(:placeholder-shown)]:top-0 peer-[:not(:placeholder-shown)]:text-xs"
+          className="pointer-events-none absolute left-4 top-1/2 -translate-y-1/2 bg-white/95 px-1 text-sm text-slate-500 transition-all duration-300 peer-focus:top-0 peer-focus:text-xs peer-focus:text-brand-600 peer-[:not(:placeholder-shown)]:top-0 peer-[:not(:placeholder-shown)]:text-xs"
         >
           {label}
         </label>
@@ -51,7 +55,11 @@ export default function FloatingInput({
           </button>
         ) : null}
       </div>
-      {error ? <p className="text-xs text-rose-600">{error}</p> : null}
+      {error ? (
+        <p id={errorId} className="text-xs text-rose-600">
+          {error}
+        </p>
+      ) : null}
     </div>
   );
 }

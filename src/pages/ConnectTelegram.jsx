@@ -65,6 +65,10 @@ export default function ConnectTelegram() {
     <div className="app-shell min-h-full px-4 py-8">
       <div className="mx-auto grid w-full max-w-5xl gap-6 lg:grid-cols-2">
         <Card className="p-8 sm:p-10">
+          <div className="mb-6 flex items-center gap-2 rounded-full bg-slate-100 px-3 py-1 text-xs font-medium text-slate-600">
+            <span className="rounded-full bg-brand-600 px-2 py-0.5 text-[10px] text-white">Step 2 / 3</span>
+            Connect Telegram
+          </div>
           <h1 className="text-3xl font-bold tracking-tightest">Connect Telegram</h1>
           <p className="mt-2 text-sm text-muted">One quick setup and your daily briefing starts flowing automatically.</p>
 

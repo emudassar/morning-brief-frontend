@@ -92,7 +92,7 @@ export default function Landing() {
 
         <section id="features" className="mx-auto w-full max-w-6xl px-4 pb-20 scroll-mt-28 sm:px-6 lg:px-8">
           <div className="mb-8 text-center">
-            <h2 className="text-3xl font-bold tracking-tightest sm:text-4xl">Built for focused mornings</h2>
+            <h2 className="section-title">Built for focused mornings</h2>
           </div>
           <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
             {features.map((feature) => {
@@ -112,7 +112,7 @@ export default function Landing() {
 
         <section className="mx-auto w-full max-w-6xl px-4 pb-20 sm:px-6 lg:px-8">
           <Card className="p-8 sm:p-10">
-            <h2 className="text-3xl font-bold tracking-tightest">How it works</h2>
+            <h2 className="section-title">How it works</h2>
             <div className="mt-8 grid gap-6 sm:grid-cols-3">
               {["Sign up", "Connect Telegram", "Get daily briefing"].map((step, idx) => (
                 <div key={step} className="rounded-xl border border-slate-200 bg-white p-5">
@@ -132,7 +132,7 @@ export default function Landing() {
         <section id="pricing" className="mx-auto w-full max-w-6xl px-4 pb-20 scroll-mt-28 sm:px-6 lg:px-8">
           <div className="grid gap-6 lg:grid-cols-2">
             <Card className="p-8">
-              <h2 className="text-2xl font-bold tracking-tightest">Telegram preview</h2>
+              <h2 className="section-title">Telegram preview</h2>
               <p className="mt-2 text-sm text-muted">A sample of what your morning message looks like.</p>
               <div className="mt-6 rounded-2xl border border-slate-200 bg-slate-50 p-5 text-sm text-slate-800">
                 <p className="font-semibold">Good morning Mudassar! Here is your briefing for Tuesday, May 5.</p>
@@ -145,7 +145,7 @@ export default function Landing() {
             <Card className="flex flex-col justify-between bg-brand-gradient p-8 text-white shadow-premium">
               <div>
                 <p className="text-sm font-medium text-white/90">Conversion CTA</p>
-                <h3 className="mt-2 text-3xl font-bold tracking-tightest">Start your first focused morning today.</h3>
+                <h3 className="section-title mt-2 !text-white">Start your first focused morning today.</h3>
                 <p className="mt-3 text-sm text-white/90">
                   Join professionals who save time every day with one smart briefing sent exactly when they need it.
                 </p>
@@ -173,7 +173,7 @@ export default function Landing() {
               </div>
             </Card>
             <Card className="p-8">
-              <h2 className="text-2xl font-bold tracking-tightest">Simple pricing</h2>
+              <h2 className="section-title">Simple pricing</h2>
               <p className="mt-2 text-sm text-muted">Placeholder section for upcoming pricing plans.</p>
               <div className="mt-6 rounded-2xl border border-dashed border-slate-300 bg-slate-50 p-6 text-center">
                 <p className="text-sm font-medium text-slate-700">Pricing details coming soon</p>

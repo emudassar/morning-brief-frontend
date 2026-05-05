@@ -8,14 +8,14 @@ export default function Button({
   ...props
 }) {
   const base =
-    "inline-flex items-center justify-center gap-2 rounded-xl font-medium transition-all duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-500/30 disabled:cursor-not-allowed disabled:opacity-60";
+    "inline-flex items-center justify-center gap-2 rounded-xl font-medium transition-all duration-300 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-500/30 disabled:cursor-not-allowed disabled:opacity-60 disabled:transform-none";
 
   const variants = {
-    primary: "bg-brand-gradient text-white shadow-premium hover:brightness-110 active:scale-[0.99]",
+    primary: "bg-brand-gradient text-white shadow-premium hover:scale-[1.01] hover:brightness-105 active:scale-[0.99]",
     secondary:
-      "border border-slate-200 bg-white text-slate-700 shadow-soft hover:border-slate-300 hover:bg-slate-50",
-    ghost: "text-slate-600 hover:bg-slate-100 hover:text-slate-900",
-    danger: "bg-rose-600 text-white shadow-soft hover:bg-rose-700",
+      "border border-slate-200 bg-white text-slate-700 shadow-soft hover:scale-[1.01] hover:border-slate-300 hover:bg-slate-50",
+    ghost: "text-slate-600 hover:scale-[1.01] hover:bg-slate-100 hover:text-slate-900",
+    danger: "bg-rose-600 text-white shadow-soft hover:scale-[1.01] hover:bg-rose-700",
   };
 
   const sizes = {

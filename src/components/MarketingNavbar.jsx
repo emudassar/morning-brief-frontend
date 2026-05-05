@@ -38,7 +38,7 @@ export default function MarketingNavbar() {
             : "border-transparent bg-white/40 backdrop-blur-md"
         }`}
       >
-        <Link to="/" className="flex items-center gap-2">
+        <Link to="/" className="flex items-center gap-2 rounded-lg focus-visible:ring-2 focus-visible:ring-brand-500/30">
           <div className="rounded-xl bg-brand-gradient p-2 text-white shadow-premium">
             <Sparkles className="h-5 w-5" />
           </div>
@@ -46,13 +46,13 @@ export default function MarketingNavbar() {
         </Link>
 
         <nav className="hidden items-center gap-6 md:flex">
-          <a href="#features" className="text-sm text-slate-600 transition-colors hover:text-slate-900">
+          <a href="#features" className="rounded-md px-1 text-sm text-slate-600 transition-colors hover:text-slate-900 focus-visible:ring-2 focus-visible:ring-brand-500/30">
             Features
           </a>
-          <a href="#pricing" className="text-sm text-slate-600 transition-colors hover:text-slate-900">
+          <a href="#pricing" className="rounded-md px-1 text-sm text-slate-600 transition-colors hover:text-slate-900 focus-visible:ring-2 focus-visible:ring-brand-500/30">
             Pricing
           </a>
-          <Link to="/login" className="text-sm text-slate-600 transition-colors hover:text-slate-900">
+          <Link to="/login" className="rounded-md px-1 text-sm text-slate-600 transition-colors hover:text-slate-900 focus-visible:ring-2 focus-visible:ring-brand-500/30">
             Login
           </Link>
           <Link to="/register">
@@ -66,12 +66,14 @@ export default function MarketingNavbar() {
           className="inline-flex h-10 w-10 items-center justify-center rounded-xl border border-slate-200 bg-white text-slate-700 transition hover:bg-slate-50 md:hidden"
           aria-label="Toggle navigation"
           aria-expanded={open}
+          aria-controls="mobile-nav-panel"
         >
           {open ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}
         </button>
       </div>
 
       <div
+        id="mobile-nav-panel"
         className={`mx-auto w-full max-w-6xl overflow-hidden transition-all duration-300 md:hidden ${
           open ? "max-h-80 opacity-100" : "max-h-0 opacity-0"
         }`}

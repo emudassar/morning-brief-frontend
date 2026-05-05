@@ -9,6 +9,7 @@ import { useAuth } from "../context/AuthContext";
 import Card from "../components/ui/Card";
 import Input from "../components/ui/Input";
 import Button from "../components/ui/Button";
+import { Skeleton } from "../components/ui/Skeleton";
 
 const tzOptions = moment.tz.names().map((name) => ({ value: name, label: name }));
 
@@ -19,7 +20,7 @@ const selectStyles = {
     borderColor: "#e2e8f0",
     minHeight: "44px",
     boxShadow: "none",
-    transition: "all 0.2s ease",
+    transition: "all 0.3s ease",
     "&:hover": { borderColor: "#cbd5e1" },
   }),
   valueContainer: (base) => ({ ...base, padding: "0 10px" }),
@@ -45,8 +46,10 @@ function ToggleRow({ label, checked, onChange, badge }) {
   return (
     <button
       type="button"
+      role="switch"
+      aria-checked={checked}
       onClick={() => onChange(!checked)}
-      className="flex w-full items-center justify-between gap-3 rounded-xl border border-slate-200/80 bg-white px-4 py-3 text-left transition hover:border-slate-300 hover:bg-slate-50"
+      className="flex w-full items-center justify-between gap-3 rounded-xl border border-slate-200/80 bg-white px-4 py-3 text-left transition hover:border-slate-300 hover:bg-slate-50 focus-visible:ring-2 focus-visible:ring-brand-500/30"
     >
       <span className="flex items-center gap-2 text-sm font-medium text-slate-800">
         {label.icon}
@@ -143,8 +146,20 @@ export default function SetPreferences() {
 
   if (loading) {
     return (
-      <div className="app-shell flex min-h-full items-center justify-center">
-        <div className="h-10 w-10 animate-spin rounded-full border-2 border-slate-200 border-t-brand-600" />
+      <div className="app-shell flex min-h-full items-center justify-center px-4 py-8">
+        <div className="w-full max-w-3xl space-y-6">
+          <Card className="p-8">
+            <Skeleton className="h-8 w-56" />
+            <Skeleton className="mt-3 h-10 w-full" />
+          </Card>
+          <Card className="p-6 sm:p-8">
+            <Skeleton className="h-6 w-44" />
+            <div className="mt-5 grid gap-4 sm:grid-cols-2">
+              <Skeleton className="h-24 w-full" />
+              <Skeleton className="h-24 w-full" />
+            </div>
+          </Card>
+        </div>
       </div>
     );
   }
@@ -153,6 +168,10 @@ export default function SetPreferences() {
     <div className="app-shell flex min-h-full items-center justify-center px-4 py-8">
       <div className="w-full max-w-3xl space-y-6">
         <Card className="p-8">
+          <div className="mb-3 flex items-center gap-2 rounded-full bg-slate-100 px-3 py-1 text-xs font-medium text-slate-600">
+            <span className="rounded-full bg-brand-600 px-2 py-0.5 text-[10px] text-white">Step 3 / 3</span>
+            Finalize preferences
+          </div>
           <h1 className="text-3xl font-bold tracking-tightest">Set your briefing</h1>
           <p className="mt-2 rounded-xl bg-brand-50 px-3 py-2 text-sm text-brand-700 ring-1 ring-brand-100">{preview}</p>
         </Card>
