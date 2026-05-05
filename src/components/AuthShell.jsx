@@ -1,4 +1,5 @@
 import { CheckCircle2, Sparkles } from "lucide-react";
+import { Link } from "react-router-dom";
 
 const bullets = [
   "Daily AI briefings built for focus",
@@ -11,10 +12,14 @@ export default function AuthShell({ title, subtitle, children }) {
     <div className="app-shell min-h-full">
       <div className="mx-auto grid min-h-full w-full max-w-6xl items-stretch gap-6 px-4 py-8 lg:grid-cols-2 lg:gap-8 lg:px-8">
         <section className="hidden overflow-hidden rounded-3xl border border-indigo-100/70 bg-brand-gradient p-10 text-white shadow-sm lg:flex lg:flex-col lg:justify-between">
-          <div className="inline-flex w-fit items-center gap-2 rounded-full bg-white/15 px-3 py-1 text-xs font-medium backdrop-blur">
+          <Link
+            to="/"
+            className="inline-flex w-fit items-center gap-2 rounded-full bg-white/15 px-3 py-1 text-xs font-medium backdrop-blur transition hover:bg-white/20 focus-visible:ring-2 focus-visible:ring-white/50"
+            aria-label="Go to home page"
+          >
             <Sparkles className="h-4 w-4" />
             Morning Briefing Agent
-          </div>
+          </Link>
           <div className="space-y-5">
             <h2 className="text-4xl font-bold leading-tight tracking-tightest text-white">
               Start every morning

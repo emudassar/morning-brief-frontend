@@ -15,6 +15,7 @@ import {
   Newspaper,
   Quote,
   Settings,
+  Sparkles,
 } from "lucide-react";
 import api from "../api/axios";
 import { useAuth } from "../context/AuthContext";
@@ -186,6 +187,16 @@ export default function SetPreferences() {
       <div className="mx-auto grid w-full max-w-7xl grid-cols-1 gap-6 lg:grid-cols-[240px_1fr]">
         <aside className="lg:sticky lg:top-8 lg:h-fit">
           <Card className="p-4">
+            <Link
+              to="/"
+              className="mb-3 flex items-center gap-2 rounded-xl px-2 py-2 text-slate-900 transition hover:bg-slate-100"
+              aria-label="Go to home page"
+            >
+              <span className="rounded-lg bg-brand-gradient p-1.5 text-white">
+                <Sparkles className="h-3.5 w-3.5" />
+              </span>
+              <span className="text-sm font-semibold tracking-tight">Morning Briefing Agent</span>
+            </Link>
             <p className="px-2 pb-3 text-xs font-semibold uppercase tracking-wide text-slate-400">Workspace</p>
             <nav className="space-y-1.5">
               <Link
