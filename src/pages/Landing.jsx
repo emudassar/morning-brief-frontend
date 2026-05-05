@@ -2,6 +2,7 @@ import { Link } from "react-router-dom";
 import { CalendarClock, MessageCircle, Sparkles, TrendingUp, CheckCircle2 } from "lucide-react";
 import Button from "../components/ui/Button";
 import Card from "../components/ui/Card";
+import MarketingNavbar from "../components/MarketingNavbar";
 
 const features = [
   {
@@ -29,25 +30,10 @@ const features = [
 export default function Landing() {
   return (
     <div className="app-shell">
-      <header className="mx-auto flex w-full max-w-6xl items-center justify-between px-4 py-6 sm:px-6 lg:px-8">
-        <div className="flex items-center gap-2">
-          <div className="rounded-xl bg-brand-gradient p-2 text-white shadow-premium">
-            <Sparkles className="h-5 w-5" />
-          </div>
-          <span className="text-sm font-semibold tracking-tight text-slate-900">Morning Briefing Agent</span>
-        </div>
-        <div className="flex items-center gap-3">
-          <Link to="/login" className="link-brand text-sm">
-            Sign in
-          </Link>
-          <Link to="/register">
-            <Button size="sm">Get Started Free</Button>
-          </Link>
-        </div>
-      </header>
+      <MarketingNavbar />
 
       <main>
-        <section className="mx-auto grid w-full max-w-6xl gap-10 px-4 pb-20 pt-8 sm:px-6 lg:grid-cols-2 lg:items-center lg:gap-14 lg:px-8">
+        <section className="mx-auto grid w-full max-w-6xl gap-10 px-4 pb-20 pt-10 sm:px-6 lg:grid-cols-2 lg:items-center lg:gap-14 lg:px-8">
           <div className="space-y-6">
             <div className="inline-flex rounded-full border border-brand-100 bg-brand-50 px-3 py-1 text-xs font-medium text-brand-700">
               Your day, briefed before it begins
@@ -104,7 +90,7 @@ export default function Landing() {
           </Card>
         </section>
 
-        <section className="mx-auto w-full max-w-6xl px-4 pb-20 sm:px-6 lg:px-8">
+        <section id="features" className="mx-auto w-full max-w-6xl px-4 pb-20 scroll-mt-28 sm:px-6 lg:px-8">
           <div className="mb-8 text-center">
             <h2 className="text-3xl font-bold tracking-tightest sm:text-4xl">Built for focused mornings</h2>
           </div>
@@ -143,7 +129,7 @@ export default function Landing() {
           </Card>
         </section>
 
-        <section className="mx-auto w-full max-w-6xl px-4 pb-20 sm:px-6 lg:px-8">
+        <section id="pricing" className="mx-auto w-full max-w-6xl px-4 pb-20 scroll-mt-28 sm:px-6 lg:px-8">
           <div className="grid gap-6 lg:grid-cols-2">
             <Card className="p-8">
               <h2 className="text-2xl font-bold tracking-tightest">Telegram preview</h2>
@@ -184,6 +170,14 @@ export default function Landing() {
                     Get Started Free
                   </Button>
                 </Link>
+              </div>
+            </Card>
+            <Card className="p-8">
+              <h2 className="text-2xl font-bold tracking-tightest">Simple pricing</h2>
+              <p className="mt-2 text-sm text-muted">Placeholder section for upcoming pricing plans.</p>
+              <div className="mt-6 rounded-2xl border border-dashed border-slate-300 bg-slate-50 p-6 text-center">
+                <p className="text-sm font-medium text-slate-700">Pricing details coming soon</p>
+                <p className="mt-1 text-xs text-muted">Start with the free tier today while plans are finalized.</p>
               </div>
             </Card>
           </div>

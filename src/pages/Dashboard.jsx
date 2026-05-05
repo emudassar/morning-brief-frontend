@@ -4,6 +4,7 @@ import toast from "react-hot-toast";
 import {
   AlertTriangle,
   CalendarClock,
+  LayoutDashboard,
   History,
   Loader2,
   LogOut,
@@ -113,161 +114,173 @@ export default function Dashboard() {
 
   const active = !!user.isActive;
   const linked = !!user.telegramChatId;
+  const firstName = (user.email || "there").split("@")[0];
 
   return (
-    <div className="app-shell pb-16 pt-8">
-      <div className="mx-auto max-w-3xl px-4 sm:px-6">
-        {!linked && (
-          <Card className="mb-6 flex gap-3 border-amber-200 bg-amber-50 p-4 text-sm text-amber-950">
-            <AlertTriangle className="mt-0.5 h-5 w-5 shrink-0 text-amber-600" aria-hidden />
-            <div className="space-y-2">
-              <p className="font-semibold">Telegram is not connected to this account</p>
-              <p>
-                “Send briefing” needs your <strong>telegramChatId</strong> in the database. That is set when{" "}
-                <strong>your server bot</strong> receives this message (use the <strong>exact</strong> email you
-                registered with):
-              </p>
-              <p className="rounded-lg bg-white/80 px-3 py-2 font-mono text-amber-900 ring-1 ring-amber-200">
-                /start {user.email}
-              </p>
-              <ol className="list-decimal space-y-1 pl-4 text-amber-900/90">
-                <li>Keep <code className="rounded bg-white/70 px-1">npm run dev</code> running in <code className="rounded bg-white/70 px-1">server/</code> so the bot can poll Telegram.</li>
-                <li>
-                  On your phone, open your bot in Telegram and send the line above. If the server cannot reach Telegram
-                  (timeouts in the server terminal), try VPN / mobile hotspot or allow Node through the firewall — until
-                  polling works, the link will not save.
-                </li>
-                <li>
-                  Return here — this page will work after <code className="rounded bg-white/70 px-1">GET /api/user/me</code>{" "}
-                  shows <code className="rounded bg-white/70 px-1">telegramChatId</code> (refresh or reopen the
-                  dashboard).
-                </li>
-              </ol>
-              <Link to="/connect-telegram" className="inline-flex items-center gap-2 link-brand">
-                <MessageCircle className="h-4 w-4" aria-hidden />
-                Open Link Telegram page
+    <div className="app-shell min-h-full px-4 py-8">
+      <div className="mx-auto grid w-full max-w-7xl gap-6 lg:grid-cols-[240px_1fr]">
+        <aside className="lg:sticky lg:top-8 lg:h-fit">
+          <Card className="p-4">
+            <p className="px-2 pb-3 text-xs font-semibold uppercase tracking-wide text-slate-400">Workspace</p>
+            <nav className="space-y-1.5">
+              <div className="flex items-center gap-2 rounded-xl bg-brand-50 px-3 py-2 text-sm font-medium text-brand-700">
+                <LayoutDashboard className="h-4 w-4" />
+                Dashboard
+              </div>
+              <Link
+                to="/setup"
+                className="flex items-center gap-2 rounded-xl px-3 py-2 text-sm font-medium text-slate-600 transition hover:bg-slate-100 hover:text-slate-900"
+              >
+                <Settings className="h-4 w-4" />
+                Settings
               </Link>
+              <a
+                href="#history"
+                className="flex items-center gap-2 rounded-xl px-3 py-2 text-sm font-medium text-slate-600 transition hover:bg-slate-100 hover:text-slate-900"
+              >
+                <History className="h-4 w-4" />
+                History
+              </a>
+              <button
+                type="button"
+                onClick={handleLogout}
+                className="flex w-full items-center gap-2 rounded-xl px-3 py-2 text-sm font-medium text-slate-600 transition hover:bg-slate-100 hover:text-slate-900"
+              >
+                <LogOut className="h-4 w-4" />
+                Logout
+              </button>
+            </nav>
+          </Card>
+        </aside>
+
+        <main className="space-y-6">
+          <Card className="flex flex-wrap items-center justify-between gap-4 p-6">
+            <div>
+              <p className="text-sm text-muted">Good morning,</p>
+              <h1 className="text-2xl font-bold tracking-tightest capitalize">{firstName}</h1>
+              <p className="mt-1 flex items-center gap-2 text-sm text-slate-600">
+                <CalendarClock className="h-4 w-4 text-brand-600" />
+                Next briefing: {user.briefingTime} - {user.timezone}
+              </p>
+            </div>
+            <div className="flex items-center gap-3">
+              <span
+                className={`inline-flex items-center gap-1.5 rounded-full px-3 py-1 text-sm font-medium ${
+                  active ? "bg-emerald-100 text-emerald-800" : "bg-rose-100 text-rose-700"
+                }`}
+              >
+                <span className={`h-2 w-2 rounded-full ${active ? "bg-emerald-500" : "bg-rose-500"}`} />
+                {active ? "Active" : "Paused"}
+              </span>
+              <Button type="button" onClick={handleToggleActive} disabled={toggleLoading} variant="secondary" size="sm">
+                {toggleLoading ? (
+                  <Loader2 className="h-4 w-4 animate-spin" />
+                ) : active ? (
+                  <Pause className="h-4 w-4" />
+                ) : (
+                  <Play className="h-4 w-4" />
+                )}
+                {active ? "Pause" : "Resume"}
+              </Button>
             </div>
           </Card>
-        )}
 
-        <Card className="mb-8 flex flex-wrap items-center justify-between gap-4 p-5">
-          <div className="flex items-start gap-3">
-            <CalendarClock className="mt-0.5 h-6 w-6 text-brand-600 shrink-0" aria-hidden />
-            <div>
-              <p className="text-sm text-muted">Next briefing</p>
-              <p className="font-semibold text-slate-900 tracking-tight">
-                {user.briefingTime} — {user.timezone}
-              </p>
-            </div>
-          </div>
-          <div className="flex flex-wrap items-center gap-3">
-            <span
-              className={`inline-flex items-center gap-1.5 rounded-full px-3 py-1 text-sm font-medium ${
-                active ? "bg-emerald-100 text-emerald-800" : "bg-red-100 text-red-800"
-              }`}
-            >
-              <span className={`h-2 w-2 rounded-full ${active ? "bg-emerald-500" : "bg-red-500"}`} />
-              {active ? "Active" : "Paused"}
-            </span>
-            <Button
-              type="button"
-              onClick={handleToggleActive}
-              disabled={toggleLoading}
-              variant="secondary"
-              size="sm"
-            >
-              {toggleLoading ? (
-                <Loader2 className="h-4 w-4 animate-spin" />
-              ) : active ? (
-                <Pause className="h-4 w-4" />
-              ) : (
-                <Play className="h-4 w-4" />
-              )}
-              {active ? "Pause" : "Resume"}
-            </Button>
-          </div>
-        </Card>
-
-        <section className="mb-8">
-          <Button
-            type="button"
-            onClick={handleSendNow}
-            disabled={sendLoading || !linked}
-            title={!linked ? "Connect Telegram first" : undefined}
-            className="w-full"
-            size="lg"
-          >
-            {sendLoading ? (
-              <Loader2 className="h-6 w-6 animate-spin" aria-hidden />
-            ) : (
-              <Send className="h-6 w-6" aria-hidden />
-            )}
-            {sendLoading ? "Sending..." : "Send briefing now"}
-          </Button>
-        </section>
-
-        <Card className="mb-8 p-6">
-          <h2 className="mb-3 flex items-center gap-2 text-sm font-semibold uppercase tracking-wide text-slate-500">
-            <History className="h-4 w-4" aria-hidden />
-            Last briefing
-          </h2>
-          {latestBriefing?.content ? (
-            <textarea
-              readOnly
-              value={latestBriefing.content}
-              rows={10}
-              className="w-full resize-y rounded-xl border border-slate-200 bg-slate-50 p-3 font-sans text-sm text-slate-800 outline-none transition hover:border-slate-300 focus:border-brand-500 focus:ring-4 focus:ring-brand-500/10"
-            />
-          ) : (
-            <p className="rounded-xl border border-dashed border-slate-200 bg-slate-50 py-8 text-center text-slate-500">
-              No briefings yet
-            </p>
+          {!linked && (
+            <Card className="flex gap-3 border-amber-200 bg-amber-50 p-4 text-sm text-amber-950">
+              <AlertTriangle className="mt-0.5 h-5 w-5 shrink-0 text-amber-600" aria-hidden />
+              <div className="space-y-2">
+                <p className="font-semibold">Telegram not connected</p>
+                <p>Send this command to your bot to activate delivery:</p>
+                <p className="rounded-lg bg-white/80 px-3 py-2 font-mono text-amber-900 ring-1 ring-amber-200">
+                  /start {user.email}
+                </p>
+                <Link to="/connect-telegram" className="inline-flex items-center gap-2 link-brand">
+                  <MessageCircle className="h-4 w-4" />
+                  Open Link Telegram page
+                </Link>
+              </div>
+            </Card>
           )}
-        </Card>
 
-        <Card className="mb-10 p-6">
-          <h2 className="mb-4 flex items-center gap-2 text-sm font-semibold uppercase tracking-wide text-slate-500">
-            <History className="h-4 w-4" aria-hidden />
-            Recent history
-          </h2>
-          <ul className="space-y-3">
-            {briefingHistory.length === 0 ? (
-              <li className="text-sm text-slate-500">No history yet.</li>
-            ) : (
-              briefingHistory.map((b) => (
-                <li
-                  key={b._id}
-                  className="flex items-center justify-between gap-3 rounded-xl border border-slate-100 bg-slate-50/80 px-3 py-2 transition hover:border-slate-200 hover:bg-slate-50"
-                >
-                  <span className="text-sm text-slate-700">
-                    {new Date(b.createdAt).toLocaleString(undefined, {
-                      dateStyle: "medium",
-                      timeStyle: "short",
-                    })}
+          <section className="grid gap-4 xl:grid-cols-3">
+            <Card className="xl:col-span-1 p-5">
+              <p className="text-xs font-semibold uppercase tracking-wide text-slate-500">Primary action</p>
+              <Button
+                type="button"
+                onClick={handleSendNow}
+                disabled={sendLoading || !linked}
+                title={!linked ? "Connect Telegram first" : undefined}
+                className="mt-4 w-full"
+                size="lg"
+              >
+                {sendLoading ? <Loader2 className="h-5 w-5 animate-spin" /> : <Send className="h-5 w-5" />}
+                {sendLoading ? "Sending..." : "Send Now"}
+              </Button>
+              <p className="mt-3 text-xs text-muted">Delivers instantly to your connected Telegram account.</p>
+            </Card>
+
+            <Card className="xl:col-span-2 p-5">
+              <h2 className="mb-3 text-xs font-semibold uppercase tracking-wide text-slate-500">Last briefing preview</h2>
+              {latestBriefing?.content ? (
+                <textarea
+                  readOnly
+                  value={latestBriefing.content}
+                  rows={8}
+                  className="w-full resize-y rounded-xl border border-slate-200 bg-slate-50 p-3 font-sans text-sm text-slate-800 outline-none transition hover:border-slate-300 focus:border-brand-500 focus:ring-4 focus:ring-brand-500/10"
+                />
+              ) : (
+                <p className="rounded-xl border border-dashed border-slate-200 bg-slate-50 py-8 text-center text-slate-500">
+                  No briefings yet
+                </p>
+              )}
+            </Card>
+          </section>
+
+          <section id="history" className="grid gap-4 xl:grid-cols-3">
+            <Card className="p-5">
+              <h2 className="text-xs font-semibold uppercase tracking-wide text-slate-500">Status</h2>
+              <div className="mt-4 space-y-3">
+                <div className="flex items-center justify-between rounded-xl bg-slate-50 px-3 py-2">
+                  <span className="text-sm text-slate-600">Delivery</span>
+                  <StatusBadge status={active ? "sent" : "failed"} />
+                </div>
+                <div className="flex items-center justify-between rounded-xl bg-slate-50 px-3 py-2">
+                  <span className="text-sm text-slate-600">Telegram</span>
+                  <span className={`rounded-full px-2 py-0.5 text-xs font-medium ${linked ? "bg-emerald-100 text-emerald-800" : "bg-amber-100 text-amber-800"}`}>
+                    {linked ? "connected" : "not linked"}
                   </span>
-                  <StatusBadge status={b.status} />
-                </li>
-              ))
-            )}
-          </ul>
-        </Card>
+                </div>
+              </div>
+            </Card>
 
-        <footer className="flex flex-wrap items-center justify-between gap-4 border-t border-slate-200 pt-6 text-sm">
-          <Link to="/setup" className="inline-flex items-center gap-2 link-brand">
-            <Settings className="h-4 w-4" aria-hidden />
-            Edit preferences
-          </Link>
-          <Button
-            type="button"
-            onClick={handleLogout}
-            variant="ghost"
-            size="sm"
-          >
-            <LogOut className="h-4 w-4" aria-hidden />
-            Logout
-          </Button>
-        </footer>
+            <Card className="xl:col-span-2 p-5">
+              <h2 className="mb-4 flex items-center gap-2 text-xs font-semibold uppercase tracking-wide text-slate-500">
+                <History className="h-4 w-4" />
+                History
+              </h2>
+              <ul className="space-y-3">
+                {briefingHistory.length === 0 ? (
+                  <li className="text-sm text-slate-500">No history yet.</li>
+                ) : (
+                  briefingHistory.map((b) => (
+                    <li
+                      key={b._id}
+                      className="flex items-center justify-between gap-3 rounded-xl border border-slate-100 bg-slate-50/80 px-3 py-2 transition hover:border-slate-200 hover:bg-slate-50"
+                    >
+                      <span className="text-sm text-slate-700">
+                        {new Date(b.createdAt).toLocaleString(undefined, {
+                          dateStyle: "medium",
+                          timeStyle: "short",
+                        })}
+                      </span>
+                      <StatusBadge status={b.status} />
+                    </li>
+                  ))
+                )}
+              </ul>
+            </Card>
+          </section>
+        </main>
       </div>
     </div>
   );

@@ -3,6 +3,7 @@ import { useNavigate } from "react-router-dom";
 import Select from "react-select";
 import toast from "react-hot-toast";
 import moment from "moment-timezone";
+import { Bitcoin, CalendarDays, Clock3, CloudSun, Globe2, Newspaper, Quote } from "lucide-react";
 import api from "../api/axios";
 import { useAuth } from "../context/AuthContext";
 import Card from "../components/ui/Card";
@@ -42,18 +43,28 @@ function defaultModules() {
 
 function ToggleRow({ label, checked, onChange, badge }) {
   return (
-    <label className="flex cursor-pointer items-center justify-between gap-3 rounded-xl border border-slate-200/80 bg-white px-4 py-3 transition hover:border-slate-300 hover:bg-slate-50">
+    <button
+      type="button"
+      onClick={() => onChange(!checked)}
+      className="flex w-full items-center justify-between gap-3 rounded-xl border border-slate-200/80 bg-white px-4 py-3 text-left transition hover:border-slate-300 hover:bg-slate-50"
+    >
       <span className="flex items-center gap-2 text-sm font-medium text-slate-800">
-        {label}
+        {label.icon}
+        <span>{label.text}</span>
         {badge}
       </span>
-      <input
-        type="checkbox"
-        checked={checked}
-        onChange={(e) => onChange(e.target.checked)}
-        className="h-5 w-5 rounded border-slate-300 text-brand-600 focus:ring-brand-500"
-      />
-    </label>
+      <span
+        className={`relative inline-flex h-6 w-11 items-center rounded-full transition ${
+          checked ? "bg-brand-600" : "bg-slate-300"
+        }`}
+      >
+        <span
+          className={`inline-block h-5 w-5 transform rounded-full bg-white shadow transition ${
+            checked ? "translate-x-5" : "translate-x-0.5"
+          }`}
+        />
+      </span>
+    </button>
   );
 }
 
@@ -107,7 +118,8 @@ export default function SetPreferences() {
 
   const preview = useMemo(() => {
     const tz = timezone?.value ?? "UTC";
-    return `Your briefing will arrive daily at ${briefingTime} (${tz})`;
+    const readableTime = moment(briefingTime, "HH:mm").format("h:mm A");
+    return `Your briefing will arrive at ${readableTime} (${tz})`;
   }, [briefingTime, timezone]);
 
   async function handleSubmit(e) {
@@ -139,44 +151,60 @@ export default function SetPreferences() {
 
   return (
     <div className="app-shell flex min-h-full items-center justify-center px-4 py-8">
-      <Card className="w-full max-w-xl p-8 sm:p-10">
-        <h1 className="text-3xl font-bold tracking-tightest">Set your briefing</h1>
-        <p className="mt-2 text-sm text-muted">{preview}</p>
+      <div className="w-full max-w-3xl space-y-6">
+        <Card className="p-8">
+          <h1 className="text-3xl font-bold tracking-tightest">Set your briefing</h1>
+          <p className="mt-2 rounded-xl bg-brand-50 px-3 py-2 text-sm text-brand-700 ring-1 ring-brand-100">{preview}</p>
+        </Card>
 
-        <form onSubmit={handleSubmit} className="mt-8 space-y-6">
-          <Input
-            id="briefingTime"
-            type="time"
-            label="Daily briefing time"
-            value={briefingTime}
-            onChange={(e) => setBriefingTime(e.target.value)}
-          />
+        <form onSubmit={handleSubmit} className="space-y-6">
+          <Card className="p-6 sm:p-8">
+            <h2 className="text-xl font-semibold text-slate-900">Time & Timezone</h2>
+            <div className="mt-5 grid gap-4 sm:grid-cols-2">
+              <div className="space-y-2">
+                <div className="mb-1 flex items-center gap-2 text-sm font-medium text-slate-700">
+                  <Clock3 className="h-4 w-4 text-brand-600" />
+                  Daily briefing time
+                </div>
+                <Input
+                  id="briefingTime"
+                  type="time"
+                  value={briefingTime}
+                  onChange={(e) => setBriefingTime(e.target.value)}
+                />
+              </div>
+              <div className="space-y-2">
+                <div className="mb-1 flex items-center gap-2 text-sm font-medium text-slate-700">
+                  <Globe2 className="h-4 w-4 text-brand-600" />
+                  Timezone
+                </div>
+                <Select
+                  options={tzOptions}
+                  value={timezone}
+                  onChange={(v) => v && setTimezone(v)}
+                  styles={selectStyles}
+                  isSearchable
+                />
+              </div>
+            </div>
+          </Card>
 
-          <div>
-            <label className="mb-1 block text-sm font-medium text-slate-700">Timezone</label>
-            <Select
-              options={tzOptions}
-              value={timezone}
-              onChange={(v) => v && setTimezone(v)}
-              styles={selectStyles}
-              isSearchable
-            />
-          </div>
-
-          <div className="space-y-2">
-            <p className="text-sm font-medium text-slate-700">Modules</p>
+          <Card className="p-6 sm:p-8">
+            <h2 className="text-xl font-semibold text-slate-900">Modules</h2>
+            <p className="mt-1 text-sm text-muted">Choose what appears in your daily briefing.</p>
+            <div className="mt-5 space-y-2">
             <ToggleRow
-              label="Weather"
+              label={{ text: "Weather", icon: <CloudSun className="h-4 w-4 text-brand-600" /> }}
               checked={modules.weather}
               onChange={(v) => setModules((m) => ({ ...m, weather: v }))}
             />
             <ToggleRow
-              label="News"
+              label={{ text: "News", icon: <Newspaper className="h-4 w-4 text-brand-600" /> }}
               checked={modules.news}
               onChange={(v) => setModules((m) => ({ ...m, news: v }))}
             />
             <ToggleRow
-              label="Calendar"
+              label={{ text: "Calendar", icon: <CalendarDays className="h-4 w-4 text-brand-600" /> }}
               checked={modules.calendar}
               onChange={(v) => setModules((m) => ({ ...m, calendar: v }))}
               badge={
@@ -186,22 +214,23 @@ export default function SetPreferences() {
               }
             />
             <ToggleRow
-              label="Crypto"
+              label={{ text: "Crypto", icon: <Bitcoin className="h-4 w-4 text-brand-600" /> }}
               checked={modules.crypto}
               onChange={(v) => setModules((m) => ({ ...m, crypto: v }))}
             />
             <ToggleRow
-              label="Quote"
+              label={{ text: "Quote", icon: <Quote className="h-4 w-4 text-brand-600" /> }}
               checked={modules.quote}
               onChange={(v) => setModules((m) => ({ ...m, quote: v }))}
             />
           </div>
+          </Card>
 
           <Button type="submit" loading={saving} className="w-full" size="lg">
             {saving ? "Saving..." : "Save & go to dashboard"}
           </Button>
         </form>
-      </Card>
+      </div>
     </div>
   );
 }

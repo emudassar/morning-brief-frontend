@@ -6,9 +6,8 @@ import moment from "moment-timezone";
 import api from "../api/axios";
 import { useAuth } from "../context/AuthContext";
 import AuthShell from "../components/AuthShell";
-import Card from "../components/ui/Card";
-import Input from "../components/ui/Input";
 import Button from "../components/ui/Button";
+import FloatingInput from "../components/ui/FloatingInput";
 
 const COUNTRIES = [
   { code: "us", label: "United States" },
@@ -65,10 +64,12 @@ export default function Register() {
     tzOptions.find((o) => o.value === "UTC") ?? tzOptions[0]
   );
   const [loading, setLoading] = useState(false);
+  const [error, setError] = useState("");
 
   async function handleSubmit(e) {
     e.preventDefault();
     setLoading(true);
+    setError("");
     try {
       const { data } = await api.post("/api/auth/register", {
         email,
@@ -83,6 +84,7 @@ export default function Register() {
     } catch (err) {
       const msg =
         err.response?.data?.error ?? err.message ?? "Registration failed";
+      setError(msg);
       toast.error(msg);
     } finally {
       setLoading(false);
@@ -101,35 +103,38 @@ export default function Register() {
         </>
       }
     >
-      <Card className="p-8 sm:p-10">
-        <form onSubmit={handleSubmit} className="space-y-4">
-          <Input
-            id="email"
-            type="email"
-            autoComplete="email"
-            required
-            label="Email"
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
-          />
-          <Input
-            id="password"
-            type="password"
-            autoComplete="new-password"
-            required
-            label="Password"
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
-          />
-          <Input
-            id="city"
-            type="text"
-            required
-            label="City"
-            value={city}
-            onChange={(e) => setCity(e.target.value)}
-            placeholder="For weather updates"
-          />
+      <form onSubmit={handleSubmit} className="space-y-4">
+        {error ? (
+          <div className="rounded-xl border border-rose-200 bg-rose-50 px-3 py-2 text-sm text-rose-700">
+            {error}
+          </div>
+        ) : null}
+        <FloatingInput
+          id="email"
+          type="email"
+          autoComplete="email"
+          required
+          label="Email address"
+          value={email}
+          onChange={(e) => setEmail(e.target.value)}
+        />
+        <FloatingInput
+          id="password"
+          type="password"
+          autoComplete="new-password"
+          required
+          label="Password"
+          value={password}
+          onChange={(e) => setPassword(e.target.value)}
+        />
+        <FloatingInput
+          id="city"
+          type="text"
+          required
+          label="City"
+          value={city}
+          onChange={(e) => setCity(e.target.value)}
+        />
           <div className="space-y-2">
             <label htmlFor="country" className="block text-sm font-medium text-slate-700">
               Country
@@ -158,11 +163,10 @@ export default function Register() {
               placeholder="Search timezone..."
             />
           </div>
-          <Button type="submit" loading={loading} className="w-full" size="lg">
-            {loading ? "Creating account..." : "Continue"}
-          </Button>
-        </form>
-      </Card>
+        <Button type="submit" loading={loading} className="w-full" size="lg">
+          {loading ? "Creating account..." : "Continue"}
+        </Button>
+      </form>
     </AuthShell>
   );
 }
