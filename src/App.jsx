@@ -7,6 +7,7 @@ import Login from "./pages/Login.jsx";
 import ConnectTelegram from "./pages/ConnectTelegram.jsx";
 import SetPreferences from "./pages/SetPreferences.jsx";
 import Dashboard from "./pages/Dashboard.jsx";
+import Landing from "./pages/Landing.jsx";
 
 export default function App() {
   return (
@@ -24,6 +25,7 @@ export default function App() {
           }}
         />
         <Routes>
+          <Route path="/" element={<Landing />} />
           <Route path="/register" element={<Register />} />
           <Route path="/login" element={<Login />} />
           <Route
@@ -50,7 +52,6 @@ export default function App() {
               </ProtectedRoute>
             }
           />
-          <Route path="/" element={<Navigate to="/login" replace />} />
           <Route path="*" element={<Navigate to="/login" replace />} />
         </Routes>
       </BrowserRouter>
