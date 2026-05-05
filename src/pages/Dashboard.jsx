@@ -110,6 +110,14 @@ export default function Dashboard() {
     navigate("/login");
   }
 
+  function handleGoHistory() {
+    const section = document.getElementById("history");
+    if (section) {
+      section.scrollIntoView({ behavior: "smooth", block: "start" });
+    }
+    setSidebarOpen(false);
+  }
+
   if (loading || !user) {
     return <DashboardSkeleton />;
   }
@@ -156,14 +164,14 @@ export default function Dashboard() {
                 <Settings className="h-4 w-4" />
                 Settings
               </Link>
-              <a
-                href="#history"
-                onClick={() => setSidebarOpen(false)}
-                className="flex items-center gap-2 rounded-xl px-3 py-2 text-sm font-medium text-slate-600 transition hover:bg-slate-100 hover:text-slate-900"
+              <button
+                type="button"
+                onClick={handleGoHistory}
+                className="flex w-full items-center gap-2 rounded-xl px-3 py-2 text-sm font-medium text-slate-600 transition hover:bg-slate-100 hover:text-slate-900"
               >
                 <History className="h-4 w-4" />
                 History
-              </a>
+              </button>
               <button
                 type="button"
                 onClick={handleLogout}
