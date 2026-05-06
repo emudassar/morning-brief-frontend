@@ -1,31 +1,7 @@
 import { Link } from "react-router-dom";
-import { CalendarClock, MessageCircle, Sparkles, TrendingUp, CheckCircle2 } from "lucide-react";
 import Button from "../components/ui/Button";
 import Card from "../components/ui/Card";
 import MarketingNavbar from "../components/MarketingNavbar";
-
-const features = [
-  {
-    title: "AI Briefing",
-    description: "Start each day with a concise, intelligent summary of what matters most.",
-    icon: Sparkles,
-  },
-  {
-    title: "Telegram Delivery",
-    description: "Receive your briefing where you already are, with zero extra app friction.",
-    icon: MessageCircle,
-  },
-  {
-    title: "Smart Scheduling",
-    description: "Pick your ideal time and timezone so updates always arrive on your rhythm.",
-    icon: CalendarClock,
-  },
-  {
-    title: "Personalized Insights",
-    description: "Tailor content by city, country, and modules to keep every briefing relevant.",
-    icon: TrendingUp,
-  },
-];
 
 export default function Landing() {
   return (
@@ -90,54 +66,138 @@ export default function Landing() {
           </Card>
         </section>
 
-        <section id="features" className="mx-auto w-full max-w-6xl px-4 pb-20 scroll-mt-28 sm:px-6 lg:px-8">
-          <div className="mb-8 text-center">
-            <h2 className="section-title">Built for focused mornings</h2>
-          </div>
-          <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
-            {features.map((feature) => {
-              const Icon = feature.icon;
-              return (
-                <Card key={feature.title} className="p-6 transition hover:-translate-y-0.5 hover:shadow-premium">
-                  <div className="mb-4 inline-flex rounded-lg bg-brand-50 p-2 text-brand-700">
-                    <Icon className="h-5 w-5" />
-                  </div>
-                  <h3 className="text-lg font-semibold">{feature.title}</h3>
-                  <p className="mt-2 text-sm text-muted">{feature.description}</p>
-                </Card>
-              );
-            })}
-          </div>
-        </section>
-
-        <section className="mx-auto w-full max-w-6xl px-4 pb-20 sm:px-6 lg:px-8">
-          <Card className="p-8 sm:p-10">
-            <h2 className="section-title">How it works</h2>
-            <div className="mt-8 grid gap-6 sm:grid-cols-3">
-              {["Sign up", "Connect Telegram", "Get daily briefing"].map((step, idx) => (
-                <div key={step} className="rounded-xl border border-slate-200 bg-white p-5">
-                  <p className="text-xs font-semibold uppercase tracking-wide text-brand-600">Step {idx + 1}</p>
-                  <p className="mt-2 text-base font-semibold text-slate-900">{step}</p>
-                  <p className="mt-1 text-sm text-muted">
-                    {idx === 0 && "Create your account and set your preferences in under a minute."}
-                    {idx === 1 && "Link your Telegram in one command so delivery is instant and reliable."}
-                    {idx === 2 && "Receive a personalized briefing every morning exactly when you need it."}
-                  </p>
-                </div>
-              ))}
-            </div>
-          </Card>
-        </section>
-
         <section className="py-20 bg-white">
+          <div className="mx-auto max-w-5xl px-4">
+            <h2 className="text-3xl font-bold text-slate-900 text-center">How it works</h2>
+            <p className="mt-3 text-slate-500 text-center max-w-xl mx-auto">
+              Three steps. One Telegram message. Every morning.
+            </p>
+            <div className="mt-12 grid grid-cols-1 md:grid-cols-3 gap-8">
+              <div className="text-center">
+                <div className="mx-auto flex h-14 w-14 items-center justify-center rounded-2xl bg-slate-900 text-white text-xl font-bold">
+                  1
+                </div>
+                <h3 className="mt-4 text-lg font-semibold text-slate-900">Create your account</h3>
+                <p className="mt-2 text-sm text-slate-500">
+                  Sign up in 30 seconds. Set your city, timezone, and what modules you want in your briefing.
+                </p>
+              </div>
+              <div className="text-center">
+                <div className="mx-auto flex h-14 w-14 items-center justify-center rounded-2xl bg-amber-400 text-white text-xl font-bold">
+                  2
+                </div>
+                <h3 className="mt-4 text-lg font-semibold text-slate-900">Connect Telegram</h3>
+                <p className="mt-2 text-sm text-slate-500">
+                  Send one message to our Telegram bot to link your account. Takes 10 seconds.
+                </p>
+              </div>
+              <div className="text-center">
+                <div className="mx-auto flex h-14 w-14 items-center justify-center rounded-2xl bg-emerald-500 text-white text-xl font-bold">
+                  3
+                </div>
+                <h3 className="mt-4 text-lg font-semibold text-slate-900">Wake up informed</h3>
+                <p className="mt-2 text-sm text-slate-500">
+                  Every morning at your chosen time, Gemini AI writes your personal briefing and sends it straight to Telegram.
+                </p>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <section className="py-12 bg-slate-900">
+          <div className="mx-auto max-w-5xl px-4">
+            <div className="grid grid-cols-2 md:grid-cols-4 gap-6 text-center">
+              <div>
+                <p className="text-3xl font-extrabold text-white">7 days</p>
+                <p className="mt-1 text-sm text-slate-400">Free trial, no card</p>
+              </div>
+              <div>
+                <p className="text-3xl font-extrabold text-white">90 sec</p>
+                <p className="mt-1 text-sm text-slate-400">Delivery after schedule</p>
+              </div>
+              <div>
+                <p className="text-3xl font-extrabold text-white">$0</p>
+                <p className="mt-1 text-sm text-slate-400">Cost at launch</p>
+              </div>
+              <div>
+                <p className="text-3xl font-extrabold text-white">5 apps</p>
+                <p className="mt-1 text-sm text-slate-400">Replaced by 1 message</p>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <section id="features" className="py-20 bg-white">
+          <div className="mx-auto max-w-5xl px-4">
+            <h2 className="text-3xl font-bold text-slate-900 text-center">What arrives every morning</h2>
+            <p className="mt-3 text-slate-500 text-center max-w-xl mx-auto">
+              One Telegram message. Everything you need to start your day.
+            </p>
+            <div className="mt-12 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+              <div className="rounded-2xl border border-slate-200 p-6">
+                <div className="text-3xl">🌤️</div>
+                <h3 className="mt-3 font-semibold text-slate-900">Live Weather</h3>
+                <p className="mt-2 text-sm text-slate-500">
+                  Current temp, feels like, humidity, wind speed, and a practical outfit or commute tip.
+                </p>
+              </div>
+              <div className="rounded-2xl border border-slate-200 p-6">
+                <div className="text-3xl">📰</div>
+                <h3 className="mt-3 font-semibold text-slate-900">Top News</h3>
+                <p className="mt-2 text-sm text-slate-500">
+                  Top 3 headlines from your country — curated and summarized by Gemini AI.
+                </p>
+              </div>
+              <div className="rounded-2xl border border-slate-200 p-6">
+                <div className="text-3xl">📅</div>
+                <h3 className="mt-3 font-semibold text-slate-900">Calendar Events</h3>
+                <p className="mt-2 text-sm text-slate-500">
+                  All your Google Calendar events for today with prep suggestions between meetings.
+                </p>
+              </div>
+              <div className="rounded-2xl border border-slate-200 p-6">
+                <div className="text-3xl">💬</div>
+                <h3 className="mt-3 font-semibold text-slate-900">Motivational Quote</h3>
+                <p className="mt-2 text-sm text-slate-500">
+                  A handpicked daily quote to set the right mindset before your day starts.
+                </p>
+              </div>
+              <div className="rounded-2xl border border-slate-200 p-6">
+                <div className="text-3xl">⚡</div>
+                <h3 className="mt-3 font-semibold text-slate-900">AI Written</h3>
+                <p className="mt-2 text-sm text-slate-500">
+                  Gemini 1.5 Flash writes a warm, personal briefing — not a raw data dump.
+                </p>
+              </div>
+              <div className="rounded-2xl border border-slate-200 p-6">
+                <div className="text-3xl">🕐</div>
+                <h3 className="mt-3 font-semibold text-slate-900">Your Schedule</h3>
+                <p className="mt-2 text-sm text-slate-500">
+                  Set any delivery time in any timezone. Your briefing waits for you, not the other way around.
+                </p>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <section id="pricing" className="py-20 bg-slate-50">
           <div className="mx-auto max-w-4xl px-4 text-center">
             <h2 className="text-3xl font-bold text-slate-900">Simple, honest pricing</h2>
-            <p className="mt-3 text-slate-500 text-base">Start free for 7 days. No credit card required.</p>
+            <p className="mt-3 text-slate-500 text-base max-w-lg mx-auto">
+              Start completely free for 7 days — no credit card needed.
+              Upgrade when you are ready for unlimited daily briefings.
+            </p>
             <div className="mt-8 flex flex-col sm:flex-row gap-4 justify-center">
-              <Link to="/register" className="inline-flex items-center justify-center rounded-xl bg-slate-900 px-6 py-3 text-sm font-semibold text-white hover:bg-slate-700 transition">
-                Start Free Trial
+              <Link
+                to="/register"
+                className="inline-flex items-center justify-center rounded-xl bg-slate-900 px-8 py-3 text-sm font-semibold text-white hover:bg-slate-700 transition"
+              >
+                Start Free — 7 Days
               </Link>
-              <Link to="/pricing" className="inline-flex items-center justify-center rounded-xl border border-slate-300 px-6 py-3 text-sm font-semibold text-slate-700 hover:bg-slate-50 transition">
+              <Link
+                to="/pricing"
+                className="inline-flex items-center justify-center rounded-xl border-2 border-slate-300 px-8 py-3 text-sm font-semibold text-slate-700 hover:bg-slate-100 transition"
+              >
                 See All Plans →
               </Link>
             </div>
