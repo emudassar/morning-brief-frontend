@@ -38,7 +38,11 @@ export default function MarketingNavbar() {
             : "border-transparent bg-white/40 backdrop-blur-md"
         }`}
       >
-        <Link to="/" className="flex items-center gap-2 rounded-lg focus-visible:ring-2 focus-visible:ring-brand-500/30">
+        <Link
+          to="/"
+          onClick={() => window.scrollTo({ top: 0, behavior: "smooth" })}
+          className="flex items-center gap-2 rounded-lg focus-visible:ring-2 focus-visible:ring-brand-500/30"
+        >
           <div className="rounded-xl bg-brand-gradient p-2 text-white shadow-premium">
             <Sparkles className="h-5 w-5" />
           </div>
