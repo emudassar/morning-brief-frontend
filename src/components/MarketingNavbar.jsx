@@ -5,7 +5,7 @@ import Button from "./ui/Button";
 
 const navItems = [
   { label: "Features", href: "#features" },
-  { label: "Pricing", href: "#pricing" },
+  { label: "Pricing", to: "/pricing" },
   { label: "Login", to: "/login" },
 ];
 
@@ -49,9 +49,7 @@ export default function MarketingNavbar() {
           <a href="#features" className="rounded-md px-1 text-sm text-slate-600 transition-colors hover:text-slate-900 focus-visible:ring-2 focus-visible:ring-brand-500/30">
             Features
           </a>
-          <a href="#pricing" className="rounded-md px-1 text-sm text-slate-600 transition-colors hover:text-slate-900 focus-visible:ring-2 focus-visible:ring-brand-500/30">
-            Pricing
-          </a>
+          <Link to="/pricing" className="text-sm font-medium text-slate-600 hover:text-slate-900 transition">Pricing</Link>
           <Link to="/login" className="rounded-md px-1 text-sm text-slate-600 transition-colors hover:text-slate-900 focus-visible:ring-2 focus-visible:ring-brand-500/30">
             Login
           </Link>

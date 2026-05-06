@@ -129,57 +129,18 @@ export default function Landing() {
           </Card>
         </section>
 
-        <section id="pricing" className="mx-auto w-full max-w-6xl px-4 pb-20 scroll-mt-28 sm:px-6 lg:px-8">
-          <div className="grid gap-6 lg:grid-cols-2">
-            <Card className="p-8">
-              <h2 className="section-title">Telegram preview</h2>
-              <p className="mt-2 text-sm text-muted">A sample of what your morning message looks like.</p>
-              <div className="mt-6 rounded-2xl border border-slate-200 bg-slate-50 p-5 text-sm text-slate-800">
-                <p className="font-semibold">Good morning Mudassar! Here is your briefing for Tuesday, May 5.</p>
-                <p className="mt-3">☀️ Weather in Karachi: 29°C, clear sky, humidity 54%, wind 12 km/h.</p>
-                <p className="mt-2">📅 10:30 Product Standup, 2:00 Client Sync.</p>
-                <p className="mt-2">📰 1) Markets open higher 2) AI tools adoption rises 3) Global weather updates.</p>
-                <p className="mt-2 italic text-slate-600">"Small steps every day create massive momentum."</p>
-              </div>
-            </Card>
-            <Card className="flex flex-col justify-between bg-brand-gradient p-8 text-white shadow-premium">
-              <div>
-                <p className="text-sm font-medium text-white/90">Conversion CTA</p>
-                <h3 className="section-title mt-2 !text-white">Start your first focused morning today.</h3>
-                <p className="mt-3 text-sm text-white/90">
-                  Join professionals who save time every day with one smart briefing sent exactly when they need it.
-                </p>
-                <ul className="mt-5 space-y-2 text-sm">
-                  <li className="flex items-center gap-2">
-                    <CheckCircle2 className="h-4 w-4" /> Setup in 2 minutes
-                  </li>
-                  <li className="flex items-center gap-2">
-                    <CheckCircle2 className="h-4 w-4" /> Free to get started
-                  </li>
-                  <li className="flex items-center gap-2">
-                    <CheckCircle2 className="h-4 w-4" /> Delivered daily on Telegram
-                  </li>
-                </ul>
-              </div>
-              <div className="mt-8">
-                <Link to="/register">
-                  <Button
-                    size="lg"
-                    className="w-full bg-white text-brand-700 shadow-none hover:bg-slate-100"
-                  >
-                    Get Started Free
-                  </Button>
-                </Link>
-              </div>
-            </Card>
-            <Card className="p-8">
-              <h2 className="section-title">Simple pricing</h2>
-              <p className="mt-2 text-sm text-muted">Placeholder section for upcoming pricing plans.</p>
-              <div className="mt-6 rounded-2xl border border-dashed border-slate-300 bg-slate-50 p-6 text-center">
-                <p className="text-sm font-medium text-slate-700">Pricing details coming soon</p>
-                <p className="mt-1 text-xs text-muted">Start with the free tier today while plans are finalized.</p>
-              </div>
-            </Card>
+        <section className="py-20 bg-white">
+          <div className="mx-auto max-w-4xl px-4 text-center">
+            <h2 className="text-3xl font-bold text-slate-900">Simple, honest pricing</h2>
+            <p className="mt-3 text-slate-500 text-base">Start free for 7 days. No credit card required.</p>
+            <div className="mt-8 flex flex-col sm:flex-row gap-4 justify-center">
+              <Link to="/register" className="inline-flex items-center justify-center rounded-xl bg-slate-900 px-6 py-3 text-sm font-semibold text-white hover:bg-slate-700 transition">
+                Start Free Trial
+              </Link>
+              <Link to="/pricing" className="inline-flex items-center justify-center rounded-xl border border-slate-300 px-6 py-3 text-sm font-semibold text-slate-700 hover:bg-slate-50 transition">
+                See All Plans →
+              </Link>
+            </div>
           </div>
         </section>
       </main>
