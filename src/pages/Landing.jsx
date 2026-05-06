@@ -2,6 +2,7 @@ import { Link } from "react-router-dom";
 import Button from "../components/ui/Button";
 import Card from "../components/ui/Card";
 import MarketingNavbar from "../components/MarketingNavbar";
+import Footer from "../components/Footer";
 
 export default function Landing() {
   return (
@@ -205,17 +206,7 @@ export default function Landing() {
         </section>
       </main>
 
-      <footer className="mx-auto flex w-full max-w-6xl flex-col gap-3 border-t border-slate-200 px-4 py-8 text-sm text-muted sm:flex-row sm:items-center sm:justify-between sm:px-6 lg:px-8">
-        <p>© {new Date().getFullYear()} Morning Briefing Agent</p>
-        <div className="flex items-center gap-4">
-          <Link to="/login" className="link-brand text-sm">
-            Sign in
-          </Link>
-          <Link to="/register" className="link-brand text-sm">
-            Get Started
-          </Link>
-        </div>
-      </footer>
+      <Footer />
     </div>
   );
 }

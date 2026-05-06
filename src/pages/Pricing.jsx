@@ -1,5 +1,6 @@
 import { useNavigate } from "react-router-dom";
 import Navbar from "../components/Navbar";
+import Footer from "../components/Footer";
 
 const MONTHLY_URL = import.meta.env.VITE_LEMONSQUEEZY_MONTHLY_URL;
 const YEARLY_URL = import.meta.env.VITE_LEMONSQUEEZY_YEARLY_URL;
@@ -17,9 +18,15 @@ export default function Pricing() {
 
   return (
     <>
-      <Navbar />
-      <div className="min-h-screen bg-slate-50 py-16 px-4">
-        <div className="mx-auto max-w-5xl">
+      <div className="app-shell">
+        <header className="sticky top-0 z-50 px-4 pt-4 sm:px-6 lg:px-8">
+          <div className="mx-auto flex w-full max-w-6xl items-center justify-between rounded-2xl border border-slate-200/80 bg-white/80 shadow-soft backdrop-blur-xl px-4 py-3 transition-all duration-300 sm:px-5">
+            <Navbar />
+          </div>
+        </header>
+
+        <div className="min-h-screen bg-slate-50 py-16 px-4">
+          <div className="mx-auto max-w-5xl">
         {/* Header */}
         <div className="text-center mb-12">
           <h1 className="text-4xl font-bold text-slate-900">Simple pricing</h1>
@@ -127,7 +134,9 @@ export default function Pricing() {
             <p className="mt-1 text-slate-500">Yes. Lemon Squeezy handles all payments and never shares your card data with us.</p>
           </div>
         </div>
+          </div>
         </div>
+        <Footer />
       </div>
     </>
   );
