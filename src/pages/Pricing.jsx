@@ -1,4 +1,4 @@
-import { Link } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 
 const monthlyCheckoutUrl = import.meta.env.VITE_LEMONSQUEEZY_MONTHLY_URL;
 const yearlyCheckoutUrl = import.meta.env.VITE_LEMONSQUEEZY_YEARLY_URL;
@@ -13,6 +13,8 @@ const monthlyFeatures = [
 ];
 
 export default function Pricing() {
+  const navigate = useNavigate();
+
   return (
     <div className="min-h-screen bg-slate-50 px-4 py-12 text-slate-900">
       <div className="mx-auto max-w-7xl">
@@ -39,15 +41,16 @@ export default function Pricing() {
               <li>✗ No custom modules</li>
               <li>✗ No briefing history</li>
             </ul>
-            <Link
-              to="/register"
+            <button
+              type="button"
+              onClick={() => navigate("/register")}
               className="mt-6 inline-flex w-full items-center justify-center rounded-lg bg-slate-900 px-4 py-2.5 text-sm font-semibold text-white transition hover:bg-slate-800"
             >
               Start Free Trial
-            </Link>
+            </button>
           </article>
 
-          <article className="scale-100 rounded-2xl border-2 border-amber-400 bg-white p-6 shadow-md lg:scale-105">
+          <article className="scale-105 rounded-2xl border-2 border-amber-400 bg-white p-6 shadow-md">
             <span className="inline-flex rounded-full bg-amber-100 px-3 py-1 text-xs font-semibold text-amber-800">
               Most Popular
             </span>
@@ -91,7 +94,7 @@ export default function Pricing() {
         </div>
 
         <p className="mt-8 text-center text-xs text-slate-500 sm:text-sm">
-          Payments secured by Lemon Squeezy. Cancel anytime from your account.
+          Payments secured by Lemon Squeezy. Cancel anytime.
         </p>
 
         <section className="mx-auto mt-10 max-w-3xl rounded-2xl border border-slate-200 bg-white p-6 shadow-sm">

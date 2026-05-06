@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import toast from "react-hot-toast";
 import {
@@ -43,29 +43,63 @@ export default function Dashboard() {
   const [toggleLoading, setToggleLoading] = useState(false);
   const [sidebarOpen, setSidebarOpen] = useState(false);
 
-  const loadData = useCallback(async () => {
-    try {
-      const [meRes, latestRes, histRes, subRes] = await Promise.all([
-        api.get("/api/user/me"),
-        api.get("/api/briefing/latest"),
-        api.get("/api/briefing/history", { params: { limit: 7 } }),
-        api.get("/api/user/subscription"),
-      ]);
-      setUser(meRes.data);
-      setLatestBriefing(latestRes.data);
-      setBriefingHistory(Array.isArray(histRes.data) ? histRes.data : []);
-      setSubscriptionStatus(subRes.data || null);
-      setDismissedSubscriptionBanner(false);
-    } catch {
-      toast.error("Could not load dashboard");
-    } finally {
-      setLoading(false);
-    }
-  }, [setUser]);
-
   useEffect(() => {
-    loadData();
-  }, [loadData]);
+    const ac = new AbortController();
+    let cancelled = false;
+
+    function isAbortedRequest(err) {
+      return err?.code === "ERR_CANCELED" || err?.name === "CanceledError";
+    }
+
+    async function loadDashboard() {
+      setLoading(true);
+      try {
+        const meRes = await api.get("/api/user/me", { signal: ac.signal });
+        if (cancelled) return;
+        setUser(meRes.data);
+
+        const results = await Promise.allSettled([
+          api.get("/api/briefing/latest", { signal: ac.signal }),
+          api.get("/api/briefing/history", { params: { limit: 7 }, signal: ac.signal }),
+          api.get("/api/user/subscription", { signal: ac.signal }),
+        ]);
+        if (cancelled) return;
+
+        const [latestR, histR, subR] = results;
+
+        if (latestR.status === "fulfilled") {
+          setLatestBriefing(latestR.value.data);
+        } else {
+          setLatestBriefing(null);
+        }
+
+        if (histR.status === "fulfilled") {
+          setBriefingHistory(Array.isArray(histR.value.data) ? histR.value.data : []);
+        } else {
+          setBriefingHistory([]);
+        }
+
+        if (subR.status === "fulfilled") {
+          setSubscriptionStatus(subR.value.data || null);
+        } else {
+          setSubscriptionStatus(null);
+        }
+
+        setDismissedSubscriptionBanner(false);
+      } catch (err) {
+        if (cancelled || isAbortedRequest(err)) return;
+        toast.error("Could not load dashboard");
+      } finally {
+        if (!cancelled) setLoading(false);
+      }
+    }
+
+    loadDashboard();
+    return () => {
+      cancelled = true;
+      ac.abort();
+    };
+  }, [setUser]);
 
   async function handleToggleActive() {
     setToggleLoading(true);
