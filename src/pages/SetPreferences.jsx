@@ -3,6 +3,7 @@ import { Link, useNavigate } from "react-router-dom";
 import Select from "react-select";
 import toast from "react-hot-toast";
 import moment from "moment-timezone";
+import { findTimezoneOption, timezoneSelectOptions } from "../constants/timezones";
 import {
   Bitcoin,
   CalendarDays,
@@ -23,8 +24,6 @@ import Card from "../components/ui/Card";
 import Input from "../components/ui/Input";
 import Button from "../components/ui/Button";
 import { Skeleton } from "../components/ui/Skeleton";
-
-const tzOptions = moment.tz.names().map((name) => ({ value: name, label: name }));
 
 const selectStyles = {
   control: (base) => ({
@@ -90,9 +89,7 @@ export default function SetPreferences() {
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
   const [briefingTime, setBriefingTime] = useState("08:00");
-  const [timezone, setTimezone] = useState(() =>
-    tzOptions.find((o) => o.value === "UTC") ?? tzOptions[0]
-  );
+  const [timezone, setTimezone] = useState(() => findTimezoneOption("UTC"));
   const [modules, setModules] = useState(defaultModules);
 
   useEffect(() => {
@@ -108,8 +105,7 @@ export default function SetPreferences() {
         setUser(data);
         if (data.briefingTime) setBriefingTime(data.briefingTime.slice(0, 5));
         if (data.timezone) {
-          const opt = tzOptions.find((o) => o.value === data.timezone);
-          if (opt) setTimezone(opt);
+          setTimezone(findTimezoneOption(data.timezone));
         }
         if (data.modules) {
           setModules({
@@ -264,11 +260,12 @@ export default function SetPreferences() {
                     Timezone
                   </div>
                   <Select
-                    options={tzOptions}
+                    options={timezoneSelectOptions}
                     value={timezone}
                     onChange={(v) => v && setTimezone(v)}
                     styles={selectStyles}
                     isSearchable
+                    placeholder="Search city, country, or UTC offset (e.g. UTC+5, Pakistan)…"
                   />
                 </div>
               </div>

@@ -2,7 +2,7 @@ import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import Select from "react-select";
 import toast from "react-hot-toast";
-import moment from "moment-timezone";
+import { findTimezoneOption, timezoneSelectOptions } from "../constants/timezones";
 import api from "../api/axios";
 import { useAuth } from "../context/AuthContext";
 import AuthShell from "../components/AuthShell";
@@ -32,8 +32,6 @@ const COUNTRIES = [
   { code: "no", label: "Norway" },
 ];
 
-const tzOptions = moment.tz.names().map((name) => ({ value: name, label: name }));
-
 const selectStyles = {
   control: (base) => ({
     ...base,
@@ -60,9 +58,7 @@ export default function Register() {
   const [password, setPassword] = useState("");
   const [city, setCity] = useState("");
   const [country, setCountry] = useState("us");
-  const [timezone, setTimezone] = useState(() =>
-    tzOptions.find((o) => o.value === "UTC") ?? tzOptions[0]
-  );
+  const [timezone, setTimezone] = useState(() => findTimezoneOption("UTC"));
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
 
@@ -155,12 +151,12 @@ export default function Register() {
           <div className="space-y-2">
             <label className="block text-sm font-medium text-slate-700">Timezone</label>
             <Select
-              options={tzOptions}
+              options={timezoneSelectOptions}
               value={timezone}
-              onChange={(v) => setTimezone(v)}
+              onChange={(v) => v && setTimezone(v)}
               styles={selectStyles}
               isSearchable
-              placeholder="Search timezone..."
+              placeholder="Search city, country, or UTC offset (e.g. UTC+5, Pakistan)…"
             />
           </div>
         <Button type="submit" loading={loading} className="w-full" size="lg">
