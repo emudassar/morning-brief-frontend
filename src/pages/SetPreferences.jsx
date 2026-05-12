@@ -3,7 +3,7 @@ import { Link, useNavigate } from "react-router-dom";
 import Select from "react-select";
 import toast from "react-hot-toast";
 import moment from "moment-timezone";
-import { findTimezoneOption, timezoneSelectOptions } from "../constants/timezones";
+import { findTimezoneOption, timezoneFilterOption, timezoneSelectOptions } from "../constants/timezones";
 import {
   Bitcoin,
   CalendarDays,
@@ -265,7 +265,8 @@ export default function SetPreferences() {
                     onChange={(v) => v && setTimezone(v)}
                     styles={selectStyles}
                     isSearchable
-                    placeholder="Search city, country, or UTC offset (e.g. UTC+5, Pakistan)…"
+                    filterOption={timezoneFilterOption}
+                    placeholder="Open the list: row 2 is GMT+5 / UTC+5 for Pakistan. Or search GMT+5, UTC+5, Pakistan…"
                   />
                 </div>
               </div>

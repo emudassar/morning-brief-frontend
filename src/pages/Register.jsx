@@ -2,7 +2,7 @@ import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import Select from "react-select";
 import toast from "react-hot-toast";
-import { findTimezoneOption, timezoneSelectOptions } from "../constants/timezones";
+import { findTimezoneOption, timezoneFilterOption, timezoneSelectOptions } from "../constants/timezones";
 import api from "../api/axios";
 import { useAuth } from "../context/AuthContext";
 import AuthShell from "../components/AuthShell";
@@ -156,7 +156,8 @@ export default function Register() {
               onChange={(v) => v && setTimezone(v)}
               styles={selectStyles}
               isSearchable
-              placeholder="Search city, country, or UTC offset (e.g. UTC+5, Pakistan)…"
+              filterOption={timezoneFilterOption}
+              placeholder="GMT+5 / UTC+5 = Pakistan (row 2). Search GMT+5, Pakistan…"
             />
           </div>
         <Button type="submit" loading={loading} className="w-full" size="lg">
