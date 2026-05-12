@@ -1,13 +1,15 @@
 import { useEffect, useMemo, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import toast from "react-hot-toast";
-import { CheckCircle2, Copy, Loader2, MessageCircle, Send, Smartphone } from "lucide-react";
+import { CheckCircle2, Copy, ExternalLink, Loader2, MessageCircle, Send, Smartphone } from "lucide-react";
 import api from "../api/axios";
 import { useAuth } from "../context/AuthContext";
 import Card from "../components/ui/Card";
 
 const botUsername =
-  import.meta.env.VITE_TELEGRAM_BOT_USERNAME || "@YourBotUsername";
+  import.meta.env.VITE_TELEGRAM_BOT_USERNAME || "@BriefMorningAgentBot";
+const botOpenUrl =
+  import.meta.env.VITE_TELEGRAM_BOT_URL || "https://t.me/BriefMorningAgentBot";
 
 export default function ConnectTelegram() {
   const { token, user, setUser } = useAuth();
@@ -79,7 +81,19 @@ export default function ConnectTelegram() {
               </div>
               <div>
                 <p className="text-sm font-semibold text-slate-800">Step 1: Open your bot</p>
-                <p className="text-sm text-muted">Search for <span className="font-medium text-slate-700">{botUsername}</span> in Telegram.</p>
+                <p className="text-sm text-muted">
+                  Search for <span className="font-medium text-slate-700">{botUsername}</span> in Telegram, or{" "}
+                  <a
+                    href={botOpenUrl}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="inline-flex items-center gap-1 font-medium text-brand-600 underline decoration-brand-200 underline-offset-2 hover:text-brand-700"
+                  >
+                    open the bot
+                    <ExternalLink className="h-3.5 w-3.5 shrink-0" aria-hidden />
+                  </a>{" "}
+                  in your browser or app.
+                </p>
               </div>
             </div>
             <div className="flex gap-3 rounded-xl border border-slate-200 bg-slate-50 p-3">
