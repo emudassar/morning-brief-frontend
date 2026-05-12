@@ -36,7 +36,12 @@ export default function ConnectTelegram() {
         setUser(data);
         if (data.telegramChatId) {
           if (intervalId) clearInterval(intervalId);
-          setIsConnected(true);
+          setIsConnected((prev) => {
+            if (!prev) {
+              toast.success("Connected! Your first briefing is being sent to Telegram now.");
+            }
+            return true;
+          });
           setTimeout(() => navigate("/setup"), 1300);
         }
       } catch {
