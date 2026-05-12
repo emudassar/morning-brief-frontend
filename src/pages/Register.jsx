@@ -1,8 +1,8 @@
-import { useState } from "react";
+import { useMemo, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import Select from "react-select";
 import toast from "react-hot-toast";
-import { findTimezoneOption, timezoneFilterOption, timezoneSelectOptions } from "../constants/timezones";
+import { findTimezoneOption, getTimezoneSelectOptions } from "../constants/timezones";
 import api from "../api/axios";
 import { useAuth } from "../context/AuthContext";
 import AuthShell from "../components/AuthShell";
@@ -61,6 +61,8 @@ export default function Register() {
   const [timezone, setTimezone] = useState(() => findTimezoneOption("UTC"));
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
+
+  const timezoneOptions = useMemo(() => getTimezoneSelectOptions(), []);
 
   async function handleSubmit(e) {
     e.preventDefault();
@@ -151,13 +153,12 @@ export default function Register() {
           <div className="space-y-2">
             <label className="block text-sm font-medium text-slate-700">Timezone</label>
             <Select
-              options={timezoneSelectOptions}
+              options={timezoneOptions}
               value={timezone}
               onChange={(v) => v && setTimezone(v)}
               styles={selectStyles}
               isSearchable
-              filterOption={timezoneFilterOption}
-              placeholder="GMT+5 / UTC+5 = Pakistan (row 2). Search GMT+5, Pakistan…"
+              placeholder="Select timezone"
             />
           </div>
         <Button type="submit" loading={loading} className="w-full" size="lg">

@@ -3,7 +3,7 @@ import { Link, useNavigate } from "react-router-dom";
 import Select from "react-select";
 import toast from "react-hot-toast";
 import moment from "moment-timezone";
-import { findTimezoneOption, timezoneFilterOption, timezoneSelectOptions } from "../constants/timezones";
+import { findTimezoneOption, getTimezoneSelectOptions } from "../constants/timezones";
 import {
   Bitcoin,
   CalendarDays,
@@ -92,6 +92,8 @@ export default function SetPreferences() {
   const [timezone, setTimezone] = useState(() => findTimezoneOption("UTC"));
   const [modules, setModules] = useState(defaultModules);
 
+  const timezoneOptions = useMemo(() => getTimezoneSelectOptions(), []);
+
   useEffect(() => {
     if (!token) {
       navigate("/login", { replace: true });
@@ -130,8 +132,9 @@ export default function SetPreferences() {
 
   const preview = useMemo(() => {
     const tz = timezone?.value ?? "UTC";
+    const tzDisplay = timezone?.label ?? tz;
     const readableTime = moment(briefingTime, "HH:mm").format("h:mm A");
-    return `Your briefing will arrive at ${readableTime} (${tz})`;
+    return `Your briefing will arrive at ${readableTime} (${tzDisplay})`;
   }, [briefingTime, timezone]);
 
   async function handleSubmit(e) {
@@ -260,13 +263,12 @@ export default function SetPreferences() {
                     Timezone
                   </div>
                   <Select
-                    options={timezoneSelectOptions}
+                    options={timezoneOptions}
                     value={timezone}
                     onChange={(v) => v && setTimezone(v)}
                     styles={selectStyles}
                     isSearchable
-                    filterOption={timezoneFilterOption}
-                    placeholder="Open the list: row 2 is GMT+5 / UTC+5 for Pakistan. Or search GMT+5, UTC+5, Pakistan…"
+                    placeholder="Select timezone"
                   />
                 </div>
               </div>
